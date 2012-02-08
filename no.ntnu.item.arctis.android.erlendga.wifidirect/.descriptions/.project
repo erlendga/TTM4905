@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    version="1.0.0" 
+    uuid="_iNQTcEs3EeG1wZORTV2qrw" 
+    >
+    <dependencies>
+        <dependency name="com.bitreactive.library.android.core" uuid="_wMW40N6dEeCsi6itJ7ep6w" version="1.0.0"/>
+        <dependency name="com.bitreactive.library.android.core" uuid="_wMW40N6dEeCsi6itJ7ep6w" version="1.0.0"/>
+        <dependency name="com.bitreactive.library.android.dialogs" uuid="_tMxrwOHeEeCKQv4llUXfRg" version="0.0.0"/>
+        <dependency name="com.bitreactive.library.flowlogic" uuid="_7oSlAN9rEeCpD8lO_Mt_YQ" version="1.0.0"/>
+        <dependency name="com.bitreactive.library.timers" uuid="_b0djMBzFEeGAXOPaKszhRg" version="1.0.2"/>
+        <dependency name="no.ntnu.item.arctis.android.erlendga.wifidirect" uuid="_iNQTcEs3EeG1wZORTV2qrw" version="1.0.0"/>
+        <dependency name="no.ntnu.item.arctis.library.android" uuid="_TNYUMJmVEeCQQsjl-jwC1g" version="1.0.0"/>
+    </dependencies>
+</project>
