@@ -14,7 +14,6 @@ import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.provider.Settings;
@@ -31,6 +30,7 @@ public class WiFiDirectApplication extends Block {
 	public boolean isWifiP2pEnabled = false;
 	public boolean connected = false;
 	public boolean wifiP2pPeersTimedOut = false;
+	public android.content.Intent wifiP2pConnectionChangedIntent;
 	
 	public void initialize() {
 		manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
@@ -136,28 +136,6 @@ public class WiFiDirectApplication extends Block {
 			}
 		});	
 	}
-
-	public void disconnect() {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				final DeviceDetailFragment fragment = (DeviceDetailFragment) activity.getFragmentManager().findFragmentById(R.id.frag_detail);
-				fragment.resetViews();
-				
-				manager.removeGroup(channel, new ActionListener() {
-					
-					public void onSuccess() {
-						fragment.getView().setVisibility(View.GONE);
-						connected = false;
-					}
-					
-					public void onFailure(int reasonCode) {
-						Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
-					}
-				});
-			}
-		});
-	}
 	
 	private String getReason(int reasonCode) {
 		String reason = null;
@@ -212,13 +190,6 @@ public class WiFiDirectApplication extends Block {
 			}
 		});
 	}
-	
-	private ArrayList<Object> mergeChannelAndManager() {
-		ArrayList<Object> channelAndManagerList = new ArrayList<Object>();
-		channelAndManagerList.add(channel);
-		channelAndManagerList.add(manager);
-		return channelAndManagerList;
-	}
 
 	public void discoverySuccess() {
 		activity.runOnUiThread(new Runnable() {
@@ -227,7 +198,6 @@ public class WiFiDirectApplication extends Block {
 				Toast.makeText(activity, "Discovery Initiated", Toast.LENGTH_SHORT).show();
 			}
 		});
-		wifiP2pPeersTimedOut = false;
 	}
 
 	public void p2pOffWarning() {
@@ -248,14 +218,6 @@ public class WiFiDirectApplication extends Block {
 		});
 	}
 
-	public ArrayList<Object> initConnect(WifiP2pConfig config) {
-		ArrayList<Object> mergedList = new ArrayList<Object>();
-		mergedList.add(channel);
-		mergedList.add(config);
-		mergedList.add(manager);
-		return mergedList;
-	}
-
 	public void connectFailed(final int reasonCode) {
 		activity.runOnUiThread(new Runnable() {
 					
@@ -265,18 +227,13 @@ public class WiFiDirectApplication extends Block {
 		});
 	}
 
-	public ArrayList<Object> initCancelConnect() {
-		return mergeChannelAndManager();
-	}
-
-	public void setConnectedEnabled() {
-		connected = true;
-	}
-
 	public void cancelConnectSuccess() {
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
+				final DeviceDetailFragment fragment = (DeviceDetailFragment) activity.getFragmentManager().findFragmentById(R.id.frag_detail);
+				fragment.resetViews();
+				fragment.getView().setVisibility(View.GONE);
 				Toast.makeText(activity, "Connection aborted", Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -298,10 +255,9 @@ public class WiFiDirectApplication extends Block {
 				Toast.makeText(activity, "Discovery process timed out", Toast.LENGTH_SHORT).show();
 			}
 		});
-		wifiP2pPeersTimedOut = true;
 	}
 
-	public void dismissProgressDialog() {
+	public void dismissDiscoveryProgressDialog() {
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
@@ -317,5 +273,49 @@ public class WiFiDirectApplication extends Block {
 		objects.add(isWifiP2pEnabled);
 		objects.add(manager);
 		return objects;
+	}
+
+	public ArrayList<Object> initWifiDirectConnect(WifiP2pConfig config) {
+		ArrayList<Object> objects = new ArrayList<Object>();
+		objects.add(channel);
+		objects.add(config);
+		objects.add(isWifiP2pEnabled);
+		objects.add(manager);
+		return objects;
+	}
+
+	public void wifiP2pConnectionChangedTimedOut() {
+		activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				Toast.makeText(activity, "Connection process timed out", Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
+	public ArrayList<Object> initRemoveGroup() {
+		ArrayList<Object> objects = new ArrayList<Object>();
+		objects.add(channel);
+		objects.add(manager);
+		return objects;
+	}
+
+	public void connectSuccess() {
+		activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				Toast.makeText(activity, "Connection Initiated", Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
+	public void dismissConnectProgressDialog() {
+		activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				final DeviceDetailFragment fragment = (DeviceDetailFragment) activity.getFragmentManager().findFragmentById(R.id.frag_detail);
+				fragment.dismissProgressDialog();
+			}
+		});
 	}
 }

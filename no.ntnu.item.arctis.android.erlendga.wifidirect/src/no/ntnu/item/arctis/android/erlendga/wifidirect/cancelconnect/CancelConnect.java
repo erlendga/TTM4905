@@ -12,10 +12,15 @@ public class CancelConnect extends Block {
 
 	private Channel channel;
 	private WifiP2pManager manager;
-
+	
+	// Instance parameter. Edit only in overview page.
+	public final int channelElement;
+	// Instance parameter. Edit only in overview page.
+	public final int managerElement;
+	
 	public void cancelConnect(ArrayList<Object> mergeList) {
-		channel = (Channel) mergeList.get(0);
-		manager = (WifiP2pManager) mergeList.get(1);
+		channel = (Channel) mergeList.get(channelElement);
+		manager = (WifiP2pManager) mergeList.get(managerElement);
 		manager.cancelConnect(channel, new ActionListener() {
 		
 	        public void onSuccess() {
@@ -26,5 +31,11 @@ public class CancelConnect extends Block {
 	            sendToBlock("ON_FAILURE", reasonCode);
 	        }
 	    });
+	}
+	
+	// Do not edit this constructor.
+	public CancelConnect(int channelElement, int managerElement) {
+	    this.channelElement = channelElement;
+	    this.managerElement = managerElement;
 	}
 }
