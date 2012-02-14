@@ -1,14 +1,20 @@
 package no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectapplication;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import no.ntnu.item.arctis.android.R;
-import no.ntnu.item.arctis.android.erlendga.wifidirect.devicelistfragment.DeviceListFragment.DeviceActionListener;
-import android.net.wifi.p2p.WifiP2pConfig;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceListFragment;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.listener.DeviceActionListener;
+import android.app.Fragment;
+import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.bitreactive.library.android.core.activity.ArctisAndroidActivity;
 
@@ -52,24 +58,53 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-
-	public void showDetails(WifiP2pDevice device) {
-		sendSignalToBuildingBlockWithObject("SHOW_DETAILS", device);
+	
+	public void onCreateViewDeviceListFragment(View view) {
+		sendSignalToBuildingBlockWithObject("ON_CREATE_VIEW_DLF", view);
 	}
+	
+	public void onCreateViewDeviceDetailFragment(View view, Fragment fragment) {
+		ArrayList<Object> objects = new ArrayList<Object>();
+		objects.add(view);
+		objects.add(fragment);
+		sendSignalToBuildingBlockWithObject("ON_CREATE_VIEW_DDF", objects);
+	}
+
+//	public void showDetails(WifiP2pDevice device) {
+//		sendSignalToBuildingBlockWithObject("SHOW_DETAILS", device);
+//	}
 
 	public void cancelConnect() {
 		sendSignalToBuildingBlock("CANCEL_CONNECT");
 	}
 
-	public void connect(WifiP2pConfig config) {
-		sendSignalToBuildingBlockWithObject("CONNECT", config);
-	}
-
-	public void disconnect() {
-		sendSignalToBuildingBlock("DISCONNECT");
-	}
-
 	public void cancelDiscoverPeers() {
 		sendSignalToBuildingBlock("CANCEL_DISCOVER_PEERS");
+	}
+
+	public void onActivityResultDeviceDetailFragment(Intent intent) {
+		sendSignalToBuildingBlockWithObject("ON_ACTIVITY_RESULT_DDF", intent);
+	}
+
+	public void onActivityCreatedDeviceListFragment(List<WifiP2pDevice> peers) {
+		sendSignalToBuildingBlockWithObject("ON_ACTIVITY_CREATED_DLF", peers);
+	}
+
+	public void onListItemClickDeviceListFragment(WifiP2pDevice device) {
+		sendSignalToBuildingBlockWithObject("ON_LIST_ITEM_CLICK_DLF", device);
+	}
+
+	public void getViewWiFiPeerListAdapter(List<WifiP2pDevice> items, int position, View convertView) {
+		ArrayList<Object> objects = new ArrayList<Object>();
+		objects.add(items);
+		objects.add(position);
+		objects.add(convertView);
+		sendSignalToBuildingBlockWithObject("GET_VIEW_WPLA", objects);
+	}
+
+	public void onActivityCreatedDeviceListFragment(
+			DeviceListFragment fragment, List<WifiP2pDevice> peers) {
+		// TODO Auto-generated method stub
+		
 	}
 }

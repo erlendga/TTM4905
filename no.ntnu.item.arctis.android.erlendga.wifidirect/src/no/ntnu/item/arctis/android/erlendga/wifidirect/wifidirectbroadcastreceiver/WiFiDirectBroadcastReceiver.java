@@ -6,14 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.util.Log;
 
 public class WiFiDirectBroadcastReceiver extends Block {
 
 	private IntentFilter filter;
 	private Context context;
 	private BroadcastReceiver receiver;
-	private final String TAG = "wifidirectbroadcastreceiver";
 
 	public void registerReceiver() {
 		receiver = new BroadcastReceiver() {
@@ -27,7 +25,6 @@ public class WiFiDirectBroadcastReceiver extends Block {
 				}
 				else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
 					sendToBlock("WIFI_P2P_PEERS_CHANGED");
-					Log.d(TAG, "P2P peers changed");
 				}
 				else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 					sendToBlock("WIFI_P2P_CONNECTION_CHANGED", intent);

@@ -8,11 +8,9 @@
           <subvertex xmi:type="uml:State" xmi:id="_wA5hwFJDEeGYe7vbaIzGBw" name="active"/>
           <subvertex xmi:type="uml:FinalState" xmi:id="_CNzXEFJEEeGYe7vbaIzGBw" name="&lt;final>"/>
           <subvertex xmi:type="uml:FinalState" xmi:id="_DgXLIVJEEeGYe7vbaIzGBw" name="&lt;final>"/>
-          <subvertex xmi:type="uml:FinalState" xmi:id="_IKXUsFMLEeGdOIL3u38DDg" name="&lt;final>"/>
           <transition xmi:id="_wAy0EFJDEeGYe7vbaIzGBw" name="start / " source="_aadB8FI8EeGYe7vbaIzGBw" target="_wA5hwFJDEeGYe7vbaIzGBw"/>
           <transition xmi:id="_CNuekFJEEeGYe7vbaIzGBw" name=" / onSuccess" source="_wA5hwFJDEeGYe7vbaIzGBw" target="_CNzXEFJEEeGYe7vbaIzGBw"/>
           <transition xmi:id="_DgUu4FJEEeGYe7vbaIzGBw" name=" / onFailure" source="_wA5hwFJDEeGYe7vbaIzGBw" target="_DgXLIVJEEeGYe7vbaIzGBw"/>
-          <transition xmi:id="_IHXEAFMLEeGdOIL3u38DDg" name="stop / stopped" source="_wA5hwFJDEeGYe7vbaIzGBw" target="_IKXUsFMLEeGdOIL3u38DDg"/>
         </region>
       </ownedBehavior>
       <ownedOperation xmi:id="_XnpGoFI9EeGYe7vbaIzGBw" name="connecty"/>
@@ -62,16 +60,13 @@
       </node>
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_1U0EsFI-EeGYe7vbaIzGBw" name="onSuccess" incoming="__3bH0FI-EeGYe7vbaIzGBw" inPartition="_aabMwlI8EeGYe7vbaIzGBw" parameter="_1U0rwFI-EeGYe7vbaIzGBw"/>
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_3CqtoFI-EeGYe7vbaIzGBw" name="onFailure" incoming="_Crt0YFI_EeGYe7vbaIzGBw" inPartition="_aabMwlI8EeGYe7vbaIzGBw" type="_f2W_EFI-EeGYe7vbaIzGBw" parameter="_3Cr7wFI-EeGYe7vbaIzGBw"/>
-      <node xmi:type="uml:ActivityParameterNode" xmi:id="_j2vAAFMJEeGcK9d8gFlGhg" name="stop" outgoing="_nrVTAFMJEeGcK9d8gFlGhg" inPartition="_aabMwlI8EeGYe7vbaIzGBw" parameter="_7q418FI-EeGYe7vbaIzGBw"/>
-      <node xmi:type="uml:ActivityParameterNode" xmi:id="_lk4j4FMJEeGcK9d8gFlGhg" name="stopped" incoming="_nrVTAFMJEeGcK9d8gFlGhg" inPartition="_aabMwlI8EeGYe7vbaIzGBw" parameter="_8u0_MFI-EeGYe7vbaIzGBw"/>
       <edge xmi:type="uml:ObjectFlow" xmi:id="_dAgBsFI9EeGYe7vbaIzGBw" name="e0" source="_biJCwFI8EeGYe7vbaIzGBw" target="_b8ZgYFI9EeGYe7vbaIzGBw" inPartition="_aabMwlI8EeGYe7vbaIzGBw"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_YYuv4FI-EeGYe7vbaIzGBw" name="e1" source="_XnofkFI9EeGYe7vbaIzGBw" target="_WqLjYFI-EeGYe7vbaIzGBw" inPartition="_aabMwlI8EeGYe7vbaIzGBw"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_ig9kIFI-EeGYe7vbaIzGBw" name="e2" source="_WqLjYFI-EeGYe7vbaIzGBw" target="_c6N-EVI-EeGYe7vbaIzGBw" inPartition="_aabMwlI8EeGYe7vbaIzGBw"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_iq5jQFI-EeGYe7vbaIzGBw" name="e3" source="_WqLjYFI-EeGYe7vbaIzGBw" target="_egn7MVI-EeGYe7vbaIzGBw" inPartition="_aabMwlI8EeGYe7vbaIzGBw"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="__3bH0FI-EeGYe7vbaIzGBw" name="e4" source="_c6N-EVI-EeGYe7vbaIzGBw" target="_1U0EsFI-EeGYe7vbaIzGBw" inPartition="_aabMwlI8EeGYe7vbaIzGBw"/>
       <edge xmi:type="uml:ObjectFlow" xmi:id="_Crt0YFI_EeGYe7vbaIzGBw" name="e6" source="_gIjiUFI-EeGYe7vbaIzGBw" target="_3CqtoFI-EeGYe7vbaIzGBw" inPartition="_aabMwlI8EeGYe7vbaIzGBw"/>
-      <edge xmi:type="uml:ControlFlow" xmi:id="_nrVTAFMJEeGcK9d8gFlGhg" name="e5" source="_j2vAAFMJEeGcK9d8gFlGhg" target="_lk4j4FMJEeGcK9d8gFlGhg" inPartition="_aabMwlI8EeGYe7vbaIzGBw"/>
-      <group xmi:type="uml:ActivityPartition" xmi:id="_aabMwlI8EeGYe7vbaIzGBw" name="main" node="_biJCwFI8EeGYe7vbaIzGBw _XnofkFI9EeGYe7vbaIzGBw _b8ZgYFI9EeGYe7vbaIzGBw _WqLjYFI-EeGYe7vbaIzGBw _c6N-EVI-EeGYe7vbaIzGBw _egn7MVI-EeGYe7vbaIzGBw _gIjiUFI-EeGYe7vbaIzGBw _1U0EsFI-EeGYe7vbaIzGBw _3CqtoFI-EeGYe7vbaIzGBw _j2vAAFMJEeGcK9d8gFlGhg _lk4j4FMJEeGcK9d8gFlGhg" edge="_dAgBsFI9EeGYe7vbaIzGBw _YYuv4FI-EeGYe7vbaIzGBw _ig9kIFI-EeGYe7vbaIzGBw _iq5jQFI-EeGYe7vbaIzGBw __3bH0FI-EeGYe7vbaIzGBw _Crt0YFI_EeGYe7vbaIzGBw _nrVTAFMJEeGcK9d8gFlGhg"/>
+      <group xmi:type="uml:ActivityPartition" xmi:id="_aabMwlI8EeGYe7vbaIzGBw" name="main" node="_biJCwFI8EeGYe7vbaIzGBw _XnofkFI9EeGYe7vbaIzGBw _b8ZgYFI9EeGYe7vbaIzGBw _WqLjYFI-EeGYe7vbaIzGBw _c6N-EVI-EeGYe7vbaIzGBw _egn7MVI-EeGYe7vbaIzGBw _gIjiUFI-EeGYe7vbaIzGBw _1U0EsFI-EeGYe7vbaIzGBw _3CqtoFI-EeGYe7vbaIzGBw" edge="_dAgBsFI9EeGYe7vbaIzGBw _YYuv4FI-EeGYe7vbaIzGBw _ig9kIFI-EeGYe7vbaIzGBw _iq5jQFI-EeGYe7vbaIzGBw __3bH0FI-EeGYe7vbaIzGBw _Crt0YFI_EeGYe7vbaIzGBw"/>
     </packagedElement>
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_UCzG4FI9EeGYe7vbaIzGBw" name="java.util.ArrayList&lt;java.lang.Object>"/>
     <packagedElement xmi:type="uml:Signal" xmi:id="_c5x5MFI-EeGYe7vbaIzGBw" name="ON_SUCCESS"/>
@@ -98,7 +93,7 @@
     </profileApplication>
   </uml:Package>
   <graphics:Shape xmi:id="_aabz0lI8EeGYe7vbaIzGBw" x="180" y="54" width="325" height="55" base_Element="_aabMwVI8EeGYe7vbaIzGBw"/>
-  <graphics:Shape xmi:id="_aaca4FI8EeGYe7vbaIzGBw" x="180" y="108" width="325" height="145" base_Element="_aabMwlI8EeGYe7vbaIzGBw"/>
+  <graphics:Shape xmi:id="_aaca4FI8EeGYe7vbaIzGBw" x="180" y="108" width="325" height="109" base_Element="_aabMwlI8EeGYe7vbaIzGBw"/>
   <arctis:esm xmi:id="_aaca4lI8EeGYe7vbaIzGBw" base_StateMachine="_aaca4VI8EeGYe7vbaIzGBw"/>
   <graphics:Shape xmi:id="_cOaS4FI8EeGYe7vbaIzGBw" x="90" y="162" base_Element="_biJCwFI8EeGYe7vbaIzGBw" orientation="west"/>
   <graphics:Shape xmi:id="_XnxpgFI9EeGYe7vbaIzGBw" x="198" y="144" width="109" height="55" base_Element="_XnofkFI9EeGYe7vbaIzGBw" orientation="east"/>
@@ -110,7 +105,4 @@
   <arctis:event xmi:id="_wA13YFJDEeGYe7vbaIzGBw" base_Transition="_wAy0EFJDEeGYe7vbaIzGBw" triggers="_biJCwFI8EeGYe7vbaIzGBw"/>
   <arctis:event xmi:id="_CNxh4FJEEeGYe7vbaIzGBw" base_Transition="_CNuekFJEEeGYe7vbaIzGBw" effects="_1U0EsFI-EeGYe7vbaIzGBw"/>
   <arctis:event xmi:id="_DgXLIFJEEeGYe7vbaIzGBw" base_Transition="_DgUu4FJEEeGYe7vbaIzGBw" effects="_3CqtoFI-EeGYe7vbaIzGBw"/>
-  <graphics:Shape xmi:id="_kc_uwFMJEeGcK9d8gFlGhg" x="126" y="216" base_Element="_j2vAAFMJEeGcK9d8gFlGhg" orientation="west"/>
-  <graphics:Shape xmi:id="_mGKsAFMJEeGcK9d8gFlGhg" x="504" y="216" base_Element="_lk4j4FMJEeGcK9d8gFlGhg" orientation="east"/>
-  <arctis:event xmi:id="_IKU4cFMLEeGdOIL3u38DDg" base_Transition="_IHXEAFMLEeGdOIL3u38DDg" triggers="_j2vAAFMJEeGcK9d8gFlGhg" effects="_lk4j4FMJEeGcK9d8gFlGhg"/>
 </xmi:XMI>

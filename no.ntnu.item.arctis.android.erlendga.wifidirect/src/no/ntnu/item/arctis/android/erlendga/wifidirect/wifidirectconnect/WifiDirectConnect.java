@@ -2,11 +2,12 @@ package no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectconnect;
 
 import java.util.ArrayList;
 
+import no.ntnu.item.arctis.runtime.Block;
 import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
-
-import no.ntnu.item.arctis.runtime.Block;
+import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 
 public class WifiDirectConnect extends Block {
 
@@ -66,5 +67,14 @@ public class WifiDirectConnect extends Block {
 	    this.configElement = configElement;
 	    this.managerElement = managerElement;
 	    this.isWifiP2pEnabledElement = isWifiP2pEnabledElement;
+	}
+
+	public void requestConnectionInfo() {
+		manager.requestConnectionInfo(channel, new ConnectionInfoListener() {
+			
+			public void onConnectionInfoAvailable(WifiP2pInfo info) {
+				sendToBlock("ON_CONNECTION_INFO_AVAILABLE", info);
+			}
+		});
 	}
 }

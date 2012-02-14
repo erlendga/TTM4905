@@ -12,7 +12,6 @@
         <block name="c4" uuid="_Kk8_QlL0EeG4bte-bvbkCA"/>
         <block name="c3" uuid="_I7zOg05yEeGzi6PJOyF81A"/>
         <block name="c8" uuid="_FT4QAVJsEeGECvBWYMJF7A"/>
-        <block name="c7" uuid="_g2lcAlL5EeG4bte-bvbkCA"/>
     </required>
     <extras>
         <extra key="android_permission" value="android.permission.ACCESS_WIFI_STATE"/>

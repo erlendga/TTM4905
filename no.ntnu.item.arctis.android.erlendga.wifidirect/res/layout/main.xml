@@ -10,14 +10,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <fragment
-            class="no.ntnu.item.arctis.android.erlendga.wifidirect.devicelistfragment.DeviceListFragment"
+            class="no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceListFragment"
             android:id="@+id/frag_list"
             android:layout_width="match_parent"
             android:layout_height="@dimen/phone_list_height">
             <!-- Preview: layout=@layout/row_devices -->
         </fragment>
         <fragment
-            class="no.ntnu.item.arctis.android.erlendga.wifidirect.devicedetailfragment.DeviceDetailFragment"
+            class="no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceDetailFragment"
             android:id="@+id/frag_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

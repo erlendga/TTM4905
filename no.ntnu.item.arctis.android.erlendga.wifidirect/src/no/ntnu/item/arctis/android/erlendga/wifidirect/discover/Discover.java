@@ -2,8 +2,10 @@ package no.ntnu.item.arctis.android.erlendga.wifidirect.discover;
 
 import java.util.ArrayList;
 
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 
 import no.ntnu.item.arctis.runtime.Block;
 
@@ -24,5 +26,14 @@ public class Discover extends Block {
 		objects.add(channel);
 		objects.add(manager);
 		return objects;
+	}
+
+	public void requestPeers() {
+		manager.requestPeers(channel, new PeerListListener() {
+			
+			public void onPeersAvailable(WifiP2pDeviceList deviceList) {
+				sendToBlock("ON_PEERS_AVAILABLE", deviceList);
+			}
+		});
 	}
 }

@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import no.ntnu.item.arctis.android.erlendga.wifidirect.devicedetailfragment.DeviceDetailFragment;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectapplication.WiFiDirectApplication;
 
 import android.app.IntentService;
 import android.content.ContentResolver;
@@ -60,7 +60,8 @@ public class FileTransferService extends IntentService{
                 } catch (FileNotFoundException e) {
                     Log.d(TAG, e.toString());
                 }
-                DeviceDetailFragment.copyFile(is, stream);
+                
+                WiFiDirectApplication.copyFile(is, stream);
                 Log.d(TAG, "Client: Data written");
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());

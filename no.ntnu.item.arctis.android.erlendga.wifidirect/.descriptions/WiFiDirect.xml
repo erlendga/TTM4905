@@ -8,8 +8,8 @@
     <required>
         <resource path="res/drawable-xhdpi/ic_launcher.png"/>
         <resource path="res/values/dimens.xml"/>
-        <resource path="res/layout-large/main.xml"/>
         <resource path="res/layout/device_list.xml"/>
+        <resource path="res/layout-large/main.xml"/>
         <resource path="res/layout/row_devices.xml"/>
         <resource path="res/drawable-hdpi/ic_launcher.png"/>
         <resource path="res/layout/device_detail.xml"/>
@@ -31,6 +31,7 @@
         <resource path="res/layout/main.xml"/>
         <resource path="res/drawable-mdpi/ic_launcher.png"/>
         <resource path="res/values/strings.xml"/>
+        <resource path="res/layout/progress_bar.xml"/>
         <block name="c1" uuid="_qGHGEEs3EeG1wZORTV2qrw"/>
         <block name="c0" uuid="_lkMhkN5AEeCc1qVUXAlx-g"/>
     </required>
