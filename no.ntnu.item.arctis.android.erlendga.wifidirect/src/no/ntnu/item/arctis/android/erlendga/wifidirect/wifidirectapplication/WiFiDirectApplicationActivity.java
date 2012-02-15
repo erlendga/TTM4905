@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.ntnu.item.arctis.android.R;
-import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceListFragment;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.listener.DeviceActionListener;
 import android.app.Fragment;
 import android.content.Intent;
@@ -42,6 +41,16 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.action_items, menu);
+		sendSignalToBuildingBlockWithObject("ON_CREATE_OPTIONS_MENU", menu);
+		return true;
+	}
+	
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuItem progressBar = menu.getItem(1);
+		if (progressBar.isVisible()) {
+			progressBar.setVisible(false);
+		}
+		else progressBar.setVisible(true);
 		return true;
 	}
 	
@@ -70,10 +79,6 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 		sendSignalToBuildingBlockWithObject("ON_CREATE_VIEW_DDF", objects);
 	}
 
-//	public void showDetails(WifiP2pDevice device) {
-//		sendSignalToBuildingBlockWithObject("SHOW_DETAILS", device);
-//	}
-
 	public void cancelConnect() {
 		sendSignalToBuildingBlock("CANCEL_CONNECT");
 	}
@@ -94,17 +99,10 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 		sendSignalToBuildingBlockWithObject("ON_LIST_ITEM_CLICK_DLF", device);
 	}
 
-	public void getViewWiFiPeerListAdapter(List<WifiP2pDevice> items, int position, View convertView) {
+	public void getViewWiFiPeerListAdapter(View view, WifiP2pDevice device) {
 		ArrayList<Object> objects = new ArrayList<Object>();
-		objects.add(items);
-		objects.add(position);
-		objects.add(convertView);
+		objects.add(view);
+		objects.add(device);
 		sendSignalToBuildingBlockWithObject("GET_VIEW_WPLA", objects);
-	}
-
-	public void onActivityCreatedDeviceListFragment(
-			DeviceListFragment fragment, List<WifiP2pDevice> peers) {
-		// TODO Auto-generated method stub
-		
 	}
 }

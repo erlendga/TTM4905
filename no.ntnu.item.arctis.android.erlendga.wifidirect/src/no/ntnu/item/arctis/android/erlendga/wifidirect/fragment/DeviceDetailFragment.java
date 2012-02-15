@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 
 public class DeviceDetailFragment extends Fragment {
 
+	private View deviceDetailView = null;
+	
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -18,14 +20,17 @@ public class DeviceDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    	View view = inflater.inflate(R.layout.device_detail, null);
-    	((DeviceActionListener) getActivity()).onCreateViewDeviceDetailFragment(view, this);
-    	return view;
-        
+    	deviceDetailView = inflater.inflate(R.layout.device_detail, null);
+    	((DeviceActionListener) getActivity()).onCreateViewDeviceDetailFragment(deviceDetailView, this);
+    	return deviceDetailView;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	((DeviceActionListener) getActivity()).onActivityResultDeviceDetailFragment(data);
+    }
+    
+    public View getDeviceDetailView() {
+    	return deviceDetailView;
     }
 }

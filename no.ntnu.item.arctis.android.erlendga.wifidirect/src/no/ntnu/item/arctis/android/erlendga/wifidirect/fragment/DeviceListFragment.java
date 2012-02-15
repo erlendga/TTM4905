@@ -18,6 +18,7 @@ import android.widget.ListView;
 public class DeviceListFragment extends ListFragment {
 
     private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
+    private View deviceListView = null;
 
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -28,15 +29,18 @@ public class DeviceListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    	View view = inflater.inflate(R.layout.device_list, null);
-    	((DeviceActionListener) getActivity()).onCreateViewDeviceListFragment(view);
-    	return view;
+    	deviceListView = inflater.inflate(R.layout.device_list, null);
+    	return deviceListView;
     }
     
     public void onListItemClick(ListView l, View v, int position, long id) {
         WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(position);
         ((DeviceActionListener) getActivity()).onListItemClickDeviceListFragment(device);
     }
+    
+    public View getDeviceListView() {
+		return deviceListView;
+	}
 
     private class WiFiPeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
 
@@ -49,8 +53,14 @@ public class DeviceListFragment extends ListFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-        	((DeviceActionListener) getActivity()).getViewWiFiPeerListAdapter(items, position, convertView);
-        	return convertView;
+        	View view = convertView;
+        	if (view == null) {
+				LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = inflater.inflate(R.layout.row_devices, null);
+			}
+        	WifiP2pDevice device = items.get(position);
+        	((DeviceActionListener) getActivity()).getViewWiFiPeerListAdapter(view, device);       	
+        	return view;
         }
     }
 

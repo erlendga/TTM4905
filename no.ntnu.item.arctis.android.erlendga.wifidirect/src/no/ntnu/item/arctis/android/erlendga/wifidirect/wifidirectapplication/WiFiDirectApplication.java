@@ -34,6 +34,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -58,31 +59,14 @@ public class WiFiDirectApplication extends Block {
 	protected static final int CHOOSE_FILE_RESULT_CODE = 20;
 	private DeviceListFragment fragmentList;
 	private DeviceDetailFragment fragmentDetails;
-	private View progressBar;
 	private View deviceDetailView = null;
+	private Menu menu;
+	private boolean findingPeers = false;
 	
 	public void initialize() {
 		manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
 		channel = manager.initialize(activity, activity.getMainLooper(), null);
 		activity.setParentID(blockID);
-		progressBar = (View) activity.findViewById(R.id.searchProgressWrapper);
-		activity.runOnUiThread(new Runnable() {
-
-			public void run() {
-				progressBar.setVisibility(View.INVISIBLE);
-				fragmentList = (DeviceListFragment) activity.getFragmentManager().findFragmentById(R.id.frag_list);
-				fragmentDetails = (DeviceDetailFragment) activity.getFragmentManager().findFragmentById(R.id.frag_detail);
-			}
-		});
-	}
-	
-	public void toast(final String string) {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				Toast.makeText(activity, string, Toast.LENGTH_SHORT).show();
-			}
-		});
 	}
 
 	public void setWifiP2pEnabled(Intent intent) {
@@ -121,6 +105,10 @@ public class WiFiDirectApplication extends Block {
 		}
 	}
 	
+	private DeviceListFragment getDeviceListFragment() {
+		return (DeviceListFragment) activity.getFragmentManager().findFragmentById(R.id.frag_list);
+	}
+	
 	private void resetViews() {
 		activity.runOnUiThread(new Runnable() {
 			
@@ -140,17 +128,19 @@ public class WiFiDirectApplication extends Block {
 		});
 	}
 
-	public void requestPeers(final WifiP2pDeviceList peerList) {
-		if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-        peers.clear();
-        peers.addAll(peerList.getDeviceList());
-        fragmentList.notifyDataSetChanged();
-        if (peers.size() == 0) {
-            Log.d(TAG, "No devices found");
-            return;
-        }
+	public void peersAvailable(final WifiP2pDeviceList peerList) {
+        activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				peers.clear();
+		        peers.addAll(peerList.getDeviceList());
+		        getDeviceListFragment().notifyDataSetChanged();
+		        if (peers.size() == 0) {
+		            Log.d(TAG, "No devices found");
+		            return;
+		        }
+			}
+		});
 	}
 
 	public void updateThisDevice(Intent intent) {
@@ -159,9 +149,9 @@ public class WiFiDirectApplication extends Block {
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-		        TextView view = (TextView) deviceListView.findViewById(R.id.my_name);
+		        TextView view = (TextView) getDeviceListFragment().getDeviceListView().findViewById(R.id.my_name);
 		        view.setText(device.deviceName);
-		        view = (TextView) deviceListView.findViewById(R.id.my_status);
+		        view = (TextView) getDeviceListFragment().getDeviceListView().findViewById(R.id.my_status);
 		        view.setText(getDeviceStatus(device.status));
 			}
 		});
@@ -184,16 +174,20 @@ public class WiFiDirectApplication extends Block {
 
         }
     }
+    
+    private DeviceDetailFragment getDeviceDetailFragment() {
+		return (DeviceDetailFragment) activity.getFragmentManager().findFragmentById(R.id.frag_detail);
+	}
 
 	public void showDetails(final WifiP2pDevice device) {
 		this.device = device;
-		fragmentDetails.getView().setVisibility(View.VISIBLE);
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-				TextView view = (TextView) deviceListView.findViewById(R.id.device_address);
+				getDeviceDetailFragment().getView().setVisibility(View.VISIBLE);
+				TextView view = (TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.device_address);
 		        view.setText(device.deviceAddress);
-		        view = (TextView) deviceListView.findViewById(R.id.device_info);
+		        view = (TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.device_info);
 		        view.setText(device.toString());
 			}
 		});
@@ -241,17 +235,18 @@ public class WiFiDirectApplication extends Block {
 	}
 
 	public void onInitiateDiscovery() {
-		if (progressBar != null && progressBar.isShown()) {
-			progressBar.setVisibility(View.INVISIBLE);
-		}
-		progressBar.setVisibility(View.VISIBLE);
+		//TODO: Mulig fjerne denne og pinen
 	}
 
-	public void discoverySuccess() {
+	public void discoverySuccess() {	
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
 				Toast.makeText(activity, "Discovery Initiated", Toast.LENGTH_SHORT).show();
+				if (!findingPeers) {
+					activity.onPrepareOptionsMenu(menu);
+					findingPeers  = true;
+				}	
 			}
 		});
 	}
@@ -270,6 +265,7 @@ public class WiFiDirectApplication extends Block {
 			
 			public void run() {
 				Toast.makeText(activity, "Discovery Failed : " + getReason(reasonCode), Toast.LENGTH_LONG).show();
+//				activity.onPrepareOptionsMenu(menu);
 			}
 		});
 	}
@@ -300,19 +296,6 @@ public class WiFiDirectApplication extends Block {
 				Toast.makeText(activity, "Connect abort request failed. Reason: " + getReason(reasonCode), Toast.LENGTH_LONG).show();
 			}
 		});
-	}
-
-	public void wifiP2pPeersChangedTimedOut() {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				Toast.makeText(activity, "Discovery process timed out", Toast.LENGTH_SHORT).show();
-			}
-		});
-	}
-
-	public void dismissDiscoveryProgressDialog() {
-//		progressDialog.dismiss();
 	}
 
 	public ArrayList<Object> initDiscover() {
@@ -346,6 +329,10 @@ public class WiFiDirectApplication extends Block {
 			
 			public void run() {
 				Toast.makeText(activity, "Connection Initiated", Toast.LENGTH_SHORT).show();
+				if (findingPeers) {
+					activity.onPrepareOptionsMenu(menu);
+					findingPeers = false;
+				}
 			}
 		});
 	}
@@ -524,5 +511,29 @@ public class WiFiDirectApplication extends Block {
 
 	public void initDeviceListFragment(List<WifiP2pDevice> peers) {
 		this.peers = peers;
+	}
+
+	public void initOptionsMenu(Menu menu) {
+		this.menu = menu;
+	}
+
+	public void initWiFiPeerListAdapterView(ArrayList<Object> objects) {
+		final View view = (View) objects.get(0);
+		final WifiP2pDevice device = (WifiP2pDevice) objects.get(1);
+		if (device != null) {
+			activity.runOnUiThread(new Runnable() {
+				
+				public void run() {
+					TextView top = (TextView) view.findViewById(R.id.device_name);
+					TextView bottom = (TextView) view.findViewById(R.id.device_details);
+					if (top != null) {
+						top.setText(device.deviceName);
+					}
+					if (bottom != null) {
+						bottom.setText(getDeviceStatus(device.status));
+					}
+				}
+			});
+		}
 	}
 }
