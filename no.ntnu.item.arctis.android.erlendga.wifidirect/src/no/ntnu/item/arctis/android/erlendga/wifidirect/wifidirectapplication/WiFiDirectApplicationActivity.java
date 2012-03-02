@@ -7,6 +7,7 @@ import no.ntnu.item.arctis.android.R;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.listener.DeviceActionListener;
 import android.app.Fragment;
 import android.content.Intent;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,10 +48,15 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 	
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem progressBar = menu.getItem(1);
+		MenuItem discover = menu.getItem(2);
 		if (progressBar.isVisible()) {
 			progressBar.setVisible(false);
+			discover.setVisible(true);
 		}
-		else progressBar.setVisible(true);
+		else {
+			progressBar.setVisible(true);
+			discover.setVisible(false);
+		}
 		return true;
 	}
 	
@@ -67,17 +73,6 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-	
-	public void onCreateViewDeviceListFragment(View view) {
-		sendSignalToBuildingBlockWithObject("ON_CREATE_VIEW_DLF", view);
-	}
-	
-	public void onCreateViewDeviceDetailFragment(View view, Fragment fragment) {
-		ArrayList<Object> objects = new ArrayList<Object>();
-		objects.add(view);
-		objects.add(fragment);
-		sendSignalToBuildingBlockWithObject("ON_CREATE_VIEW_DDF", objects);
-	}
 
 	public void cancelConnect() {
 		sendSignalToBuildingBlock("CANCEL_CONNECT");
@@ -91,18 +86,19 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 		sendSignalToBuildingBlockWithObject("ON_ACTIVITY_RESULT_DDF", intent);
 	}
 
-	public void onActivityCreatedDeviceListFragment(List<WifiP2pDevice> peers) {
-		sendSignalToBuildingBlockWithObject("ON_ACTIVITY_CREATED_DLF", peers);
+	public void connect(WifiP2pConfig config) {
+		sendSignalToBuildingBlockWithObject("CONNECT", config);
 	}
 
-	public void onListItemClickDeviceListFragment(WifiP2pDevice device) {
-		sendSignalToBuildingBlockWithObject("ON_LIST_ITEM_CLICK_DLF", device);
+	public void disconnect() {
+		sendSignalToBuildingBlock("DISCONNECT");
 	}
 
-	public void getViewWiFiPeerListAdapter(View view, WifiP2pDevice device) {
-		ArrayList<Object> objects = new ArrayList<Object>();
-		objects.add(view);
-		objects.add(device);
-		sendSignalToBuildingBlockWithObject("GET_VIEW_WPLA", objects);
+	public void groupInfo() {
+		sendSignalToBuildingBlock("GROUP_INFO");
+	}
+
+	public void back() {
+		sendSignalToBuildingBlock("BACK");
 	}
 }

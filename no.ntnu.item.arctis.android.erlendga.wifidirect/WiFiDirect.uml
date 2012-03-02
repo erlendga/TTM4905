@@ -99,7 +99,7 @@
   <graphics:Shape xmi:id="_iNPFUEs3EeG1wZORTV2qrw" x="96" y="67" base_Element="_iM4gAEs3EeG1wZORTV2qrw" orientation="east"/>
   <graphics:Shape xmi:id="_iNPFUUs3EeG1wZORTV2qrw" x="99" y="82" base_Element="_iM3R4Es3EeG1wZORTV2qrw" orientation="east"/>
   <graphics:Shape xmi:id="_iNPFUks3EeG1wZORTV2qrw" x="18" y="18" base_Element="_iM5HEEs3EeG1wZORTV2qrw" orientation="north"/>
-  <graphics:Shape xmi:id="_iNPsYEs3EeG1wZORTV2qrw" x="180" y="180" width="198" height="127" base_Element="_iM2q0Es3EeG1wZORTV2qrw"/>
+  <graphics:Shape xmi:id="_iNPsYEs3EeG1wZORTV2qrw" x="180" y="180" width="198" height="127" aux1="normal" base_Element="_iM2q0Es3EeG1wZORTV2qrw"/>
   <graphics:Shape xmi:id="_jv6ZAEs3EeG1wZORTV2qrw" x="207" y="135" base_Element="_jv4j0Es3EeG1wZORTV2qrw"/>
   <arctis:esm xmi:id="_lM6ihUs3EeG1wZORTV2qrw" base_StateMachine="_lM6igks3EeG1wZORTV2qrw"/>
   <arctis:event xmi:id="_lM7Jk0s3EeG1wZORTV2qrw" base_Transition="_lM7Jkks3EeG1wZORTV2qrw" triggers="_lM57c0s3EeG1wZORTV2qrw"/>

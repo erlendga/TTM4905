@@ -10,7 +10,6 @@ import android.net.wifi.p2p.WifiP2pManager;
 public class WiFiDirectBroadcastReceiver extends Block {
 
 	private IntentFilter filter;
-	private Context context;
 	private BroadcastReceiver receiver;
 
 	public void registerReceiver() {
@@ -21,21 +20,19 @@ public class WiFiDirectBroadcastReceiver extends Block {
 				String action = intent.getAction();
 				
 				if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-					sendToBlock("WIFI_P2P_STATE_CHANGED", intent);
+					sendToBlock("WIFI_P2P_STATE_CHANGED_ACTION", intent);
 				}
 				else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-					sendToBlock("WIFI_P2P_PEERS_CHANGED");
+					sendToBlock("WIFI_P2P_PEERS_CHANGED_ACTION");
 				}
 				else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-					sendToBlock("WIFI_P2P_CONNECTION_CHANGED", intent);
+					sendToBlock("WIFI_P2P_CONNECTION_CHANGED_ACTION", intent);
 				}
 				else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-					sendToBlock("WIFI_P2P_THIS_DEVICE_CHANGED", intent);
+					sendToBlock("WIFI_P2P_THIS_DEVICE_CHANGED_ACTION", intent);
 				}
 			}
 		};
-		
-		context = (Context) getProperty("Android");
 		
 		filter = new IntentFilter();
 		filter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -43,11 +40,15 @@ public class WiFiDirectBroadcastReceiver extends Block {
 		filter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
 		filter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 		
-		context.registerReceiver(receiver, filter);
+		getContext().registerReceiver(receiver, filter);
 	}
 
 	public void unregisterReceiver() {
-		context.unregisterReceiver(receiver);
+		getContext().unregisterReceiver(receiver);
+	}
+	
+	private Context getContext() {
+		return (Context) getProperty("Android");
 	}
 
 }

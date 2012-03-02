@@ -27,15 +27,9 @@
       <node xmi:type="uml:AddVariableValueAction" xmi:id="_NkHA8E5zEeGzi6PJOyF81A" name="sv0" outgoing="_vYU3cE51EeGzi6PJOyF81A" incoming="_QzJv0E5zEeGzi6PJOyF81A" inPartition="_I7z1kE5yEeGzi6PJOyF81A" variable="_PBjPUE5zEeGzi6PJOyF81A"/>
       <node xmi:type="uml:ForkNode" xmi:id="_wK480E51EeGzi6PJOyF81A" name="f0" outgoing="_330MQE51EeGzi6PJOyF81A _7WRQIE51EeGzi6PJOyF81A" incoming="_vYU3cE51EeGzi6PJOyF81A" inPartition="_I7z1kE5yEeGzi6PJOyF81A"/>
       <node xmi:type="uml:AcceptEventAction" xmi:id="_25C24U51EeGzi6PJOyF81A" name="r0" outgoing="_X-tQME52EeGzi6PJOyF81A" incoming="_330MQE51EeGzi6PJOyF81A" inPartition="_I7z1kE5yEeGzi6PJOyF81A">
-        <ownedComment xmi:id="_Ar3XoE59EeGzi6PJOyF81A">
-          <body>repeating</body>
-        </ownedComment>
         <trigger xmi:id="_25FTIE51EeGzi6PJOyF81A" name="RESET_DATA" event="_25F6ME51EeGzi6PJOyF81A"/>
       </node>
       <node xmi:type="uml:AcceptEventAction" xmi:id="_6NUrEU51EeGzi6PJOyF81A" name="r1" outgoing="_YLIioE52EeGzi6PJOyF81A" incoming="_7WRQIE51EeGzi6PJOyF81A" inPartition="_I7z1kE5yEeGzi6PJOyF81A">
-        <ownedComment xmi:id="_BAzs4E59EeGzi6PJOyF81A">
-          <body>repeating</body>
-        </ownedComment>
         <trigger xmi:id="_6NWgQE51EeGzi6PJOyF81A" name="CHANNEL_LOST" event="_6NXHUE51EeGzi6PJOyF81A"/>
       </node>
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_TXsBwE52EeGzi6PJOyF81A" name="resetData" incoming="_X-tQME52EeGzi6PJOyF81A" inPartition="_I7z1kE5yEeGzi6PJOyF81A" parameter="_TXtP4E52EeGzi6PJOyF81A"/>

@@ -12,32 +12,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.ntnu.item.arctis.android.R;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.filetransferservice.FileTransferService;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceDetailFragment;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceListFragment;
 import no.ntnu.item.arctis.runtime.Block;
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.AlertDialog.Builder;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.net.NetworkInfo;
 import android.net.Uri;
-import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
+import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
+import android.net.wifi.p2p.WifiP2pManager.GroupInfoListener;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,63 +53,55 @@ public class WiFiDirectApplication extends Block {
 
 	private Channel channel;
 	private final static String TAG = "wifidirectapplication";
-	public android.net.wifi.p2p.WifiP2pManager manager;
-	public no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectapplication.WiFiDirectApplicationActivity activity;
-	public boolean isWifiP2pEnabled = false;
-	public boolean wifiP2pPeersTimedOut = false;
-	public android.content.Intent wifiP2pConnectionChangedIntent;
-	public boolean connected;
-	private List<WifiP2pDevice> peers;
-	private ProgressDialog progressDialog;
-	private View deviceListView = null;
-	private WifiP2pDevice device;
-	private WifiP2pInfo info;
-	protected static final int CHOOSE_FILE_RESULT_CODE = 20;
-	private DeviceListFragment fragmentList;
-	private DeviceDetailFragment fragmentDetails;
-	private View deviceDetailView = null;
-	private Menu menu;
-	private boolean findingPeers = false;
+	public WifiP2pManager manager;
+	public WiFiDirectApplicationActivity activity;
+	public boolean wifiP2pStateEnabled = false;
+	public boolean progressBarVisible = false;
+	private BroadcastReceiver receiver;
+	public android.view.Menu menu;
+	private WifiP2pGroup groupInfo;
+	public WifiP2pInfo connectionInfo;
 	
 	public void initialize() {
 		manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
-		channel = manager.initialize(activity, activity.getMainLooper(), null);
+		channel = manager.initialize(activity, activity.getMainLooper(), new ChannelListener() {
+			
+			public void onChannelDisconnected() {
+				Log.d(TAG, "Channel lost for the first time. Trying again.");
+				
+				activity.runOnUiThread(new Runnable() {
+					
+					public void run() {
+						Toast.makeText(activity, "Channel lost. Trying again", Toast.LENGTH_LONG).show();
+					}
+				});
+				
+				resetData();
+				
+				manager.initialize(activity, activity.getMainLooper(), new ChannelListener() {
+					
+					public void onChannelDisconnected() {
+						Log.d(TAG, "Channel is probably lost permanently.");
+						activity.runOnUiThread(new Runnable() {
+							
+							public void run() {
+								Toast.makeText(activity, "Severe! Channel is probably lost premanently. Try Disable/Re-Enable P2P.", Toast.LENGTH_LONG).show();
+							}
+						});
+					}
+				});
+			}
+		});
+		
 		activity.setParentID(blockID);
 	}
 
-	public void setWifiP2pEnabled(Intent intent) {
-		int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
-		if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-			this.isWifiP2pEnabled = true;
-		}
-		else {
-			this.isWifiP2pEnabled = false;
-			resetData();
-		}
-	}
-	
-	public void channelLostWarning() {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				Toast.makeText(activity, "Channel lost. Trying again", Toast.LENGTH_LONG).show();
-			}
-		});
-		resetData();
-	}
-
 	private void resetData() {
-		if (fragmentList != null) {
-			peers.clear();
-			activity.runOnUiThread(new Runnable() {
-				
-				public void run() {
-					fragmentList.notifyDataSetChanged();
-				}
-			});	
+		if (getDeviceListFragment() != null) {
+			getDeviceListFragment().clearPeers();
 		}
-		if (fragmentDetails != null) {
-			resetViews();
+		if (getDeviceDetailFragment() != null) {
+			getDeviceDetailFragment().resetViews();
 		}
 	}
 	
@@ -109,88 +109,40 @@ public class WiFiDirectApplication extends Block {
 		return (DeviceListFragment) activity.getFragmentManager().findFragmentById(R.id.frag_list);
 	}
 	
-	private void resetViews() {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				deviceDetailView .findViewById(R.id.btn_connect).setVisibility(View.VISIBLE);
-		        TextView view = (TextView) deviceDetailView.findViewById(R.id.device_address);
-		        view.setText(R.string.empty);
-		        view = (TextView) deviceDetailView.findViewById(R.id.device_info);
-		        view.setText(R.string.empty);
-		        view = (TextView) deviceDetailView.findViewById(R.id.group_owner);
-		        view.setText(R.string.empty);
-		        view = (TextView) deviceDetailView.findViewById(R.id.status_text);
-		        view.setText(R.string.empty);
-		        deviceDetailView.findViewById(R.id.btn_start_client).setVisibility(View.GONE);
-		        fragmentDetails.getView().setVisibility(View.GONE);
-			}
-		});
-	}
+	
 
 	public void peersAvailable(final WifiP2pDeviceList peerList) {
-        activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				peers.clear();
-		        peers.addAll(peerList.getDeviceList());
-		        getDeviceListFragment().notifyDataSetChanged();
-		        if (peers.size() == 0) {
-		            Log.d(TAG, "No devices found");
-		            return;
-		        }
-			}
-		});
-	}
-
-	public void updateThisDevice(Intent intent) {
-		final WifiP2pDevice device = (WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-		this.device = device;
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-		        TextView view = (TextView) getDeviceListFragment().getDeviceListView().findViewById(R.id.my_name);
-		        view.setText(device.deviceName);
-		        view = (TextView) getDeviceListFragment().getDeviceListView().findViewById(R.id.my_status);
-		        view.setText(getDeviceStatus(device.status));
+				List<WifiP2pDevice> peers = getDeviceListFragment().getPeers();
+				peers.clear();
+				peers.addAll(peerList.getDeviceList());
+				getDeviceListFragment().notifyDataSetChanged();
+		        if (peers.size() == 0) {
+		            getDeviceDetailFragment().resetViews();
+		        } 
+			}
+		});
+		
+	}
+
+	public void updateThisDevice(final WifiP2pDevice device) {
+		activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				if (!wifiP2pStateEnabled) {
+					getDeviceListFragment().resetThisDevice();
+				}
+				else getDeviceListFragment().updateThisDevice(device);
 			}
 		});
 	}
 	
-	private static String getDeviceStatus(int deviceStatus) {
-        switch (deviceStatus) {
-            case WifiP2pDevice.AVAILABLE:
-                return "Available";
-            case WifiP2pDevice.INVITED:
-                return "Invited";
-            case WifiP2pDevice.CONNECTED:
-                return "Connected";
-            case WifiP2pDevice.FAILED:
-                return "Failed";
-            case WifiP2pDevice.UNAVAILABLE:
-                return "Unavailable";
-            default:
-                return "Unknown";
-
-        }
-    }
+	
     
     private DeviceDetailFragment getDeviceDetailFragment() {
 		return (DeviceDetailFragment) activity.getFragmentManager().findFragmentById(R.id.frag_detail);
-	}
-
-	public void showDetails(final WifiP2pDevice device) {
-		this.device = device;
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				getDeviceDetailFragment().getView().setVisibility(View.VISIBLE);
-				TextView view = (TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.device_address);
-		        view.setText(device.deviceAddress);
-		        view = (TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.device_info);
-		        view.setText(device.toString());
-			}
-		});
 	}
 	
 	private String getReason(int reasonCode) {
@@ -216,15 +168,6 @@ public class WiFiDirectApplication extends Block {
 	public WiFiDirectApplication() {
 	}
 
-	public void channelLost() {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				Toast.makeText(activity, "Severe! Channel is probably lost premanently. Try Disable/Re-Enable P2P.", Toast.LENGTH_LONG).show();
-			}
-		});
-	}
-
 	public void startWirelessSettings() {
 		if (manager != null && channel != null) {
 					activity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
@@ -234,56 +177,64 @@ public class WiFiDirectApplication extends Block {
 		}
 	}
 
-	public void onInitiateDiscovery() {
-		//TODO: Mulig fjerne denne og pinen
-	}
-
-	public void discoverySuccess() {	
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				Toast.makeText(activity, "Discovery Initiated", Toast.LENGTH_SHORT).show();
-				if (!findingPeers) {
-					activity.onPrepareOptionsMenu(menu);
-					findingPeers  = true;
-				}	
-			}
-		});
+	public void discoverySuccess() {
+		showProgressBar();
 	}
 
 	public void p2pOffWarning() {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				Toast.makeText(activity, R.string.p2p_off_warning, Toast.LENGTH_SHORT).show();
-			}
-		});
+		hideProgressBar();
+		createAlertDialog("Enable P2P from action bar button above or system settings");
 	}
 
 	public void discoveryFailed(final int reasonCode) {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				Toast.makeText(activity, "Discovery Failed : " + getReason(reasonCode), Toast.LENGTH_LONG).show();
-//				activity.onPrepareOptionsMenu(menu);
-			}
-		});
+		createAlertDialog("Discover Peers Failed. Reason: " + getReason(reasonCode));
 	}
 
 	public void connectFailed(final int reasonCode) {
+		createAlertDialog("Connect failed. Reason: " + getReason(reasonCode));
+	}
+	
+	private void createAlertDialog(final String message) {
 		activity.runOnUiThread(new Runnable() {
-					
+			
 			public void run() {
-				Toast.makeText(activity, "Connect failed. Reason: " + getReason(reasonCode), Toast.LENGTH_LONG).show();
+				Builder builder = new Builder(activity);
+				builder.setMessage(message).setCancelable(false).setPositiveButton("OK", null);
+				AlertDialog alertDialog = builder.create();
+				alertDialog.show();
+			}
+		});
+	}
+	
+	private void hideProgressBar() {
+		activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				if (progressBarVisible) {
+					activity.onPrepareOptionsMenu(menu);
+					progressBarVisible = false;
+				}
+			}
+		});
+	}
+	
+	private void showProgressBar() {
+		activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				if (!progressBarVisible) {
+					activity.onPrepareOptionsMenu(menu);
+					progressBarVisible = true;
+				}
 			}
 		});
 	}
 
 	public void cancelConnectSuccess() {
-		resetViews();
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
+				getDeviceDetailFragment().resetViews();
 				Toast.makeText(activity, "Connection aborted", Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -293,7 +244,7 @@ public class WiFiDirectApplication extends Block {
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-				Toast.makeText(activity, "Connect abort request failed. Reason: " + getReason(reasonCode), Toast.LENGTH_LONG).show();
+				Toast.makeText(activity, "Connect connect request failed. Reason: " + getReason(reasonCode), Toast.LENGTH_LONG).show();
 			}
 		});
 	}
@@ -301,100 +252,87 @@ public class WiFiDirectApplication extends Block {
 	public ArrayList<Object> initDiscover() {
 		ArrayList<Object> objects = new ArrayList<Object>();
 		objects.add(channel);
-		objects.add(isWifiP2pEnabled);
+		objects.add(wifiP2pStateEnabled);
 		objects.add(manager);
 		return objects;
 	}
 
 	public ArrayList<Object> initWifiDirectConnect(WifiP2pConfig config) {
+		Log.d(TAG, "Connect button is clicked. Starting Wifi Direct Connect block...");
 		ArrayList<Object> objects = new ArrayList<Object>();
 		objects.add(channel);
 		objects.add(config);
-		objects.add(isWifiP2pEnabled);
+		objects.add(wifiP2pStateEnabled);
 		objects.add(manager);
 		return objects;
 	}
 
-	public void wifiP2pConnectionChangedTimedOut() {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				Toast.makeText(activity, "Connection process timed out", Toast.LENGTH_SHORT).show();
-			}
-		});
-	}
-
 	public void connectSuccess() {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				Toast.makeText(activity, "Connection Initiated", Toast.LENGTH_SHORT).show();
-				if (findingPeers) {
-					activity.onPrepareOptionsMenu(menu);
-					findingPeers = false;
-				}
-			}
-		});
+		ProgressDialog progressDialog = getDeviceDetailFragment().getDeviceDetailProgressDialog();
+		if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+		hideProgressBar();
 	}
 
-	public void dismissConnectProgressDialog() {
-		progressDialog.dismiss();
+	public void removeGroupFailed(final int reasonCode) {
+		createAlertDialog("Disconnection failed. Reason: " + getReason(reasonCode));
 	}
 
-	public void disconnectFailed(final int reasonCode) {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				Toast.makeText(activity, "Disconnection failed. Reason: " + getReason(reasonCode), Toast.LENGTH_LONG).show();
-			}
-		});
-	}
-
-	public void disconnected() {
+	public void notConnected() {
+		Log.d(TAG, "Not connected");
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
 				Toast.makeText(activity, "Disconnected", Toast.LENGTH_SHORT).show();
-				resetData();
 			}
 		});
 	}
 
-	public void connected(final WifiP2pInfo info) {
-		if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-        this.info = info;
-        fragmentDetails.getView().setVisibility(View.VISIBLE);
-
+	public void updateConnectionInfo(final WifiP2pInfo connectionInfo) {
+        this.connectionInfo = connectionInfo;
+        hideProgressBar();
         activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
+				getDeviceDetailFragment().getView().setVisibility(View.VISIBLE);
+				
+				// show the disconnect button
+				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_disconnect).setVisibility(View.VISIBLE);
+				
 				// The owner IP is now known.
-		        TextView view = (TextView) deviceListView.findViewById(R.id.group_owner);
-		        Resources resources = fragmentDetails.getResources();
-		        view.setText(resources.getString(R.string.group_owner_text) + ((info.isGroupOwner == true) ? resources.getString(R.string.yes) : resources.getString(R.string.no)));
+		        TextView view = (TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.group_owner);
+		        Resources resources = getDeviceDetailFragment().getResources();
+//		        view.setText(resources.getString(R.string.group_owner_text) + ((info.isGroupOwner == true) ? resources.getString(R.string.yes) : resources.getString(R.string.no)));
 
 		        // InetAddress from WifiP2pInfo struct.
-		        view = (TextView) deviceListView.findViewById(R.id.device_info);
-		        view.setText("Group Owner IP - " + info.groupOwnerAddress.getHostAddress());
+		        view = (TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.device_info);
+		        view.setText("Group Owner IP - " + connectionInfo.groupOwnerAddress.getHostAddress());
 
-		        // After the group negotiation, we assign the group owner as the file
-		        // server. The file server is single threaded, single connection server
-		        // socket.
-		        if (info.groupFormed && info.isGroupOwner) {
-		            new FileServerAsyncTask(getActivity(), deviceListView.findViewById(R.id.status_text)).execute();
-		        } else if (info.groupFormed) {
-		            // The other device acts as the client. In this case, we enable the
-		            // get file button.
-		            deviceListView.findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
-		            ((TextView) deviceListView.findViewById(R.id.status_text)).setText(resources.getString(R.string.client_text));
+		        // After the group negotiation, we assign the group owner as the file server.
+		        // The file server is single threaded, single connection server socket.
+		        if (connectionInfo.groupFormed && connectionInfo.isGroupOwner) {
+		        	getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_group_info).setVisibility(View.VISIBLE);
+		            new FileServerAsyncTask(getActivity(), getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.status_text)).execute();
+		        } 
+		        else if (connectionInfo.groupFormed) {
+		            // The other device acts as the client. In this case, we enable the get file button.
+		            getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
+		            getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_group_info).setVisibility(View.VISIBLE);
+		            
+		            ((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.status_text)).setText(resources.getString(R.string.client_text));
+		            
 		        }
 
 		        // hide the connect button
-		        deviceListView.findViewById(R.id.btn_connect).setVisibility(View.GONE);
+		        getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_connect).setVisibility(View.GONE);
+		        getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_back).setVisibility(View.GONE);
 			}
 		});
+	}
+	
+	public void updateGroupInfo(WifiP2pGroup groupInfo) {
+		this.groupInfo = groupInfo;
 	}
 	
 	public static class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
@@ -469,71 +407,119 @@ public class WiFiDirectApplication extends Block {
     	return activity;
 	}
 
-	public void initDeviceListView(View view) {
-		deviceListView = view;
+	public void transfer(final Intent intent) {
+        activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				Uri uri = intent.getData();
+		        TextView statusText = (TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.status_text);
+		        statusText.setText("Sending: " + uri);
+		        Log.d(TAG, "Intent----------- " + uri);
+		        Intent serviceIntent = new Intent(getActivity(), FileTransferService.class);
+		        serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
+		        serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
+		        serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_ADDRESS, connectionInfo.groupOwnerAddress.getHostAddress());
+		        serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
+		        getActivity().startService(serviceIntent);
+			}
+		});
 	}
 
-	public void initDeviceDetailView(ArrayList<Object> objects) {
-		View view = (View) objects.get(0);
-		final Fragment fragment = (Fragment) objects.get(1);
-		
-		deviceDetailView  = view;
-		deviceDetailView.findViewById(R.id.btn_connect).setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                WifiP2pConfig config = new WifiP2pConfig();
-                config.deviceAddress = device.deviceAddress;
-                config.wps.setup = WpsInfo.PBC;
-                if (progressDialog != null && progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
-                progressDialog = ProgressDialog.show(getActivity(), "Press back to cancel", "Connecting to :" + device.deviceAddress, true, true);
-                sendToBlock("CONNECT", config);
-            }
-        });
-
-        deviceDetailView.findViewById(R.id.btn_disconnect).setOnClickListener(new View.OnClickListener() {
-
-                    public void onClick(View v) {
-                    	sendToBlock("DISCONNECT");
-                    }
-                });
-
-        deviceDetailView.findViewById(R.id.btn_start_client).setOnClickListener(new View.OnClickListener() {
-
-                    public void onClick(View v) {
-                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.setType("image/*");
-                        fragment.startActivityForResult(intent, CHOOSE_FILE_RESULT_CODE);
-                    }
-                });
+	public void removeGroupSuccess() {
+		Log.d(TAG, "Disconnect success");
 	}
 
-	public void initDeviceListFragment(List<WifiP2pDevice> peers) {
-		this.peers = peers;
-	}
-
-	public void initOptionsMenu(Menu menu) {
-		this.menu = menu;
-	}
-
-	public void initWiFiPeerListAdapterView(ArrayList<Object> objects) {
-		final View view = (View) objects.get(0);
-		final WifiP2pDevice device = (WifiP2pDevice) objects.get(1);
-		if (device != null) {
-			activity.runOnUiThread(new Runnable() {
+	public void registerBroadcastReceiver() {
+		receiver = new BroadcastReceiver() {
+			
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				String action = intent.getAction();
 				
-				public void run() {
-					TextView top = (TextView) view.findViewById(R.id.device_name);
-					TextView bottom = (TextView) view.findViewById(R.id.device_details);
-					if (top != null) {
-						top.setText(device.deviceName);
-					}
-					if (bottom != null) {
-						bottom.setText(getDeviceStatus(device.status));
-					}
+				if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
+					sendToBlock("WIFI_P2P_STATE_CHANGED_ACTION", intent);
+				}
+				else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
+					sendToBlock("WIFI_P2P_THIS_DEVICE_CHANGED_ACTION", intent);
+				}
+				else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
+					sendToBlock("WIFI_P2P_CONNECTION_CHANGED_ACTION", intent);
+				}
+			}
+		};
+		
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+		filter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+		filter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+		
+		getContext().registerReceiver(receiver, filter);
+	}
+	
+	private Context getContext() {
+		return (Context) getProperty("Android");
+	}
+
+	public boolean isWifiP2pStateEnabled(Intent intent) {
+		int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
+		if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
+			return true;
+		}
+		else return false;
+	}
+
+	public WifiP2pDevice getWifiP2pDevice(Intent intent) {
+		return (WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+	}
+
+	public void unregisterBroadcastReceiver() {
+		getContext().unregisterReceiver(receiver);
+	}
+
+	public void checkConnectivity(Intent intent) {
+		NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+		WifiP2pInfo wifiP2pInfo = (WifiP2pInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO);
+		Log.d("broadcastreceiver2", "Checking connectivity...\n" + networkInfo.toString() + "\n" + wifiP2pInfo.toString());
+		if (networkInfo.isConnected()) {
+			manager.requestConnectionInfo(channel, new ConnectionInfoListener() {
+				
+				public void onConnectionInfoAvailable(WifiP2pInfo connectionInfo) {
+					sendToBlock("ON_CONNECTION_INFO_AVAILABLE", connectionInfo);
+				}
+			});
+			manager.requestGroupInfo(channel, new GroupInfoListener() {
+				
+				public void onGroupInfoAvailable(WifiP2pGroup groupInfo) {
+					sendToBlock("ON_GROUP_INFO_AVAILABLE", groupInfo);
 				}
 			});
 		}
+		else sendToBlock("NOT_CONNECTED");
+	}
+
+	public void showGroupInfo() {
+		activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_back).setVisibility(View.VISIBLE);
+				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_disconnect).setVisibility(View.GONE);
+				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_group_info).setVisibility(View.GONE);
+				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_start_client).setVisibility(View.GONE);
+				TextView view = (TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.device_info);
+				view.setText(
+						"\nInterface Name: " + groupInfo.getInterface() + "\n" +
+						"SSID: " + groupInfo.getNetworkName() + "\n" +
+						"Group Owner IP Address: " + connectionInfo.groupOwnerAddress.getHostAddress() + "\n" +	
+						"Is Group Owner: " + ((groupInfo.isGroupOwner() == true) ? getDeviceDetailFragment().getResources().getString(R.string.yes) : getDeviceDetailFragment().getResources().getString(R.string.no)) + "\n");
+				
+				if (groupInfo.isGroupOwner()) {
+					view.append("Clients in Group:\n");
+					for (WifiP2pDevice wifiP2pDevice : groupInfo.getClientList()) {
+						view.append(wifiP2pDevice.deviceAddress + "\n");
+					}
+					view.append("\nPassfrase: " + groupInfo.getPassphrase() + "\n");
+				}
+			}
+		});
 	}
 }

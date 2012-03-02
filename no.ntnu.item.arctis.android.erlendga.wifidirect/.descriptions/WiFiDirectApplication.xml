@@ -6,11 +6,9 @@
     type="block" 
     >
     <required>
-        <block name="c1" uuid="_YN34MEtCEeGAGdIn8VAKXg"/>
         <block name="c2" uuid="_94GQMeH3EeCKQv4llUXfRg"/>
         <block name="c0" uuid="_8A22Ed6nEeCsi6itJ7ep6w"/>
         <block name="c4" uuid="_Kk8_QlL0EeG4bte-bvbkCA"/>
-        <block name="c3" uuid="_I7zOg05yEeGzi6PJOyF81A"/>
         <block name="c8" uuid="_FT4QAVJsEeGECvBWYMJF7A"/>
     </required>
     <extras>
