@@ -2,6 +2,8 @@ package no.ntnu.item.arctis.android.erlendga.wifidirect.fragment;
 
 import no.ntnu.item.arctis.android.R;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.listener.DeviceActionListener;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectapplication.WiFiDirectApplication;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -11,6 +13,7 @@ import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,7 +22,7 @@ import android.widget.TextView;
 
 public class DeviceDetailFragment extends Fragment {
 
-	protected static final int CHOOSE_FILE_RESULT_CODE = 20;
+	protected static final int TAKE_PHOTO_CODE = 20;
 	private View deviceDetailView = null;
 	private WifiP2pDevice device;
 	private ProgressDialog deviceDetailProgressDialog = null;
@@ -60,14 +63,16 @@ public class DeviceDetailFragment extends Fragment {
                     }
         });
 
-        deviceDetailView.findViewById(R.id.btn_start_client).setOnClickListener(new View.OnClickListener() {
-
-                    public void onClick(View v) {
-                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.setType("image/*");
-                        startActivityForResult(intent, CHOOSE_FILE_RESULT_CODE);
-                    }
-        });
+//        deviceDetailView.findViewById(R.id.btn_start_client).setOnClickListener(new View.OnClickListener() {
+//
+//                    public void onClick(View v) {
+////                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+////                        intent.setType("image/*");
+////                        startActivityForResult(intent, CHOOSE_FILE_RESULT_CODE);
+//                    	Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                    	startActivityForResult(intent, CHOOSE_FILE_RESULT_CODE);
+//                    }
+//        });
         
         deviceDetailView.findViewById(R.id.btn_group_info).setOnClickListener(new OnClickListener() {
 			
@@ -88,7 +93,13 @@ public class DeviceDetailFragment extends Fragment {
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	((DeviceActionListener) getActivity()).onActivityResultDeviceDetailFragment(data);
+    	if (resultCode == Activity.RESULT_OK) {
+			switch (requestCode) {
+			case TAKE_PHOTO_CODE:
+				((DeviceActionListener) getActivity()).takePhoto(data);
+				break;
+			}
+		}
     }
     
     public void resetViews() {
@@ -102,6 +113,8 @@ public class DeviceDetailFragment extends Fragment {
         view = (TextView) deviceDetailView.findViewById(R.id.status_text);
         view.setText(R.string.empty);
         deviceDetailView.findViewById(R.id.btn_start_client).setVisibility(View.GONE);
+        deviceDetailView.findViewById(R.id.btn_group_info).setVisibility(View.GONE);
+        deviceDetailView.findViewById(R.id.btn_disconnect).setVisibility(View.GONE);
         deviceDetailView.setVisibility(View.GONE);
 	}
     

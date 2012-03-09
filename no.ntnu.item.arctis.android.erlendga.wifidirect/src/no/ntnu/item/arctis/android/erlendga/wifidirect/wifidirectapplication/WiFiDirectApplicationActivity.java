@@ -82,10 +82,6 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 		sendSignalToBuildingBlock("CANCEL_DISCOVER_PEERS");
 	}
 
-	public void onActivityResultDeviceDetailFragment(Intent intent) {
-		sendSignalToBuildingBlockWithObject("ON_ACTIVITY_RESULT_DDF", intent);
-	}
-
 	public void connect(WifiP2pConfig config) {
 		sendSignalToBuildingBlockWithObject("CONNECT", config);
 	}
@@ -100,5 +96,9 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 
 	public void back() {
 		sendSignalToBuildingBlock("BACK");
+	}
+
+	public void takePhoto(Intent data) {
+		sendSignalToBuildingBlockWithObject("TAKE_PHOTO", data);
 	}
 }

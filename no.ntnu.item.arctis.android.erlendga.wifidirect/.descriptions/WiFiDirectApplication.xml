@@ -6,8 +6,10 @@
     type="block" 
     >
     <required>
+        <block name="c1" uuid="_AVEEImn7EeGTlN6UOxl_EA"/>
         <block name="c2" uuid="_94GQMeH3EeCKQv4llUXfRg"/>
         <block name="c0" uuid="_8A22Ed6nEeCsi6itJ7ep6w"/>
+        <block name="c5" uuid="_kG8m0ThEEeC7X8PMsGNNiA"/>
         <block name="c4" uuid="_Kk8_QlL0EeG4bte-bvbkCA"/>
         <block name="c8" uuid="_FT4QAVJsEeGECvBWYMJF7A"/>
     </required>
@@ -19,5 +21,8 @@
         <extra key="android_permission" value="android.permission.ACCESS_NETWORK_STATE"/>
         <extra key="android_service" value="no.ntnu.item.arctis.android.erlendga.wifidirect.filetransferservice.FileTransferService"/>
         <extra key="android_permission" value="android.permission.WRITE_EXTERNAL_STORAGE"/>
+        <extra key="android_permission" value="android.permission.CAMERA"/>
+        <extra key="android_uses_feature" value="android.hardware.camera"/>
+        <extra key="android_uses_feature" value="android.hardware.camera.autofocus"/>
     </extras>
 </block>

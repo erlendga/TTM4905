@@ -14,7 +14,7 @@
           <transition xmi:id="_P9fmoFiZEeGzrczOVS35Cw" name="start / " source="_FT6sQlJsEeGECvBWYMJF7A" target="_GBeZQGLoEeGLC63b9IFupA"/>
           <transition xmi:id="_ayqwQGLoEeGLC63b9IFupA" name=" / onSuccess" source="_GBeZQGLoEeGLC63b9IFupA" target="_a1hP8GLoEeGLC63b9IFupA"/>
           <transition xmi:id="_d2EP0GLoEeGLC63b9IFupA" name=" / onFailure" source="_GBeZQGLoEeGLC63b9IFupA" target="_d2LkkGLoEeGLC63b9IFupA"/>
-          <transition xmi:id="_i9KFcGLoEeGLC63b9IFupA" name=" / peerListUpdate" source="_a1hP8GLoEeGLC63b9IFupA" target="_a1hP8GLoEeGLC63b9IFupA"/>
+          <transition xmi:id="_i9KFcGLoEeGLC63b9IFupA" name=" / onPeersAvailable" source="_a1hP8GLoEeGLC63b9IFupA" target="_a1hP8GLoEeGLC63b9IFupA"/>
           <transition xmi:id="_k16W0GLoEeGLC63b9IFupA" name="stop / stopped" source="_a1hP8GLoEeGLC63b9IFupA" target="_k1_2YGLoEeGLC63b9IFupA"/>
         </region>
       </ownedBehavior>
@@ -42,7 +42,7 @@
       <ownedParameter xmi:id="_0J_sAFJtEeGECvBWYMJF7A" name="started" direction="out" isStream="true"/>
       <ownedParameter xmi:id="_962soFJuEeGECvBWYMJF7A" name="availablePeerListChanged" isStream="true"/>
       <ownedParameter xmi:id="_r3bG8FJvEeGECvBWYMJF7A" name="timeout" parameterSet="_r3buAFJvEeGECvBWYMJF7A" direction="out"/>
-      <ownedParameter xmi:id="_nVk28FJwEeGECvBWYMJF7A" name="peerListUpdate" type="_2glh4FY8EeGoh5qclcOMgw" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_nVk28FJwEeGECvBWYMJF7A" name="onPeersAvailable" type="_2glh4FY8EeGoh5qclcOMgw" direction="out" isStream="true"/>
       <ownedParameter xmi:id="_w6oFoFJwEeGECvBWYMJF7A" name="onFailure" type="_bhlWYFJuEeGECvBWYMJF7A" parameterSet="_w6pTwFJwEeGECvBWYMJF7A" direction="out"/>
       <ownedParameter xmi:id="_TS91gFJ2EeG-YLgXhahwlw" name="onSuccess" direction="out" isStream="true"/>
       <ownedParameter xmi:id="_MUS7gFMsEeGDQM1GTnrQiA" name="stop" isStream="true"/>
@@ -62,7 +62,7 @@
       </node>
       <node xmi:type="uml:DecisionNode" xmi:id="_9ZFuQFJsEeGECvBWYMJF7A" name="d0" outgoing="_9ZORIFJsEeGECvBWYMJF7A _9ZSikFJsEeGECvBWYMJF7A" incoming="_9ZMb8FJsEeGECvBWYMJF7A" inPartition="_FT5eIFJsEeGECvBWYMJF7A"/>
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_VjfcwFJtEeGECvBWYMJF7A" name="wifiP2pDisabled" incoming="_9ZSikFJsEeGECvBWYMJF7A" inPartition="_FT5eIFJsEeGECvBWYMJF7A" parameter="_Vjgq4FJtEeGECvBWYMJF7A"/>
-      <node xmi:type="uml:ActivityParameterNode" xmi:id="_nVkP4FJwEeGECvBWYMJF7A" name="peerListUpdate" incoming="_s1R4UGNwEeGLhM6oFwwnGg" inPartition="_FT5eIFJsEeGECvBWYMJF7A" type="_2glh4FY8EeGoh5qclcOMgw" parameter="_nVk28FJwEeGECvBWYMJF7A"/>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="_nVkP4FJwEeGECvBWYMJF7A" name="onPeersAvailable" incoming="_s1R4UGNwEeGLhM6oFwwnGg" inPartition="_FT5eIFJsEeGECvBWYMJF7A" type="_2glh4FY8EeGoh5qclcOMgw" parameter="_nVk28FJwEeGECvBWYMJF7A"/>
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_w6m3gFJwEeGECvBWYMJF7A" name="onFailure" incoming="_8kb8AGN0EeGLhM6oFwwnGg" inPartition="_FT5eIFJsEeGECvBWYMJF7A" type="_bhlWYFJuEeGECvBWYMJF7A" parameter="_w6oFoFJwEeGECvBWYMJF7A"/>
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_TS3u4FJ2EeG-YLgXhahwlw" name="onSuccess" incoming="_sqms0FJuEeGECvBWYMJF7A" inPartition="_FT5eIFJsEeGECvBWYMJF7A" parameter="_TS91gFJ2EeG-YLgXhahwlw"/>
       <node xmi:type="uml:CallBehaviorAction" xmi:id="_TfRekFYYEeGsfJJUHy56eA" name="c0" inPartition="_FT5eIFJsEeGECvBWYMJF7A" behavior="_m1BqIVFpEeG7lcN5lvSDfA">

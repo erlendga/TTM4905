@@ -6,6 +6,10 @@
     type="system" 
     >
     <required>
+        <library path="libs/gson-2.1-sources.jar"/>
+        <library path="libs/android-support-v4.jar"/>
+        <library path="libs/gson-2.1.jar"/>
+        <library path="libs/gson-2.1-javadoc.jar"/>
         <resource path="res/drawable-xhdpi/ic_launcher.png"/>
         <resource path="res/values/dimens.xml"/>
         <resource path="res/layout/device_list.xml"/>

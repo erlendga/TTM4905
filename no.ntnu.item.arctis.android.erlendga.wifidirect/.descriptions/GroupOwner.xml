@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<block
+    name="Group Owner" 
+    uuid="_WiO9smj6EeGXP-GdHvgkEw" 
+    status="under construction" 
+    type="block" 
+    >
+    <required>
+        <block name="c0" uuid="_kG8m0ThEEeC7X8PMsGNNiA"/>
+    </required>
+</block>

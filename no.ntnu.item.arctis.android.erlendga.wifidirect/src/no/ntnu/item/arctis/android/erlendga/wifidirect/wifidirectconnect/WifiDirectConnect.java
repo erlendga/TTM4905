@@ -84,7 +84,7 @@ public class WifiDirectConnect extends Block {
 		return objects;
 	}
 
-	public void registerBroadcastReceiver() {
+	public void registerReceiver() {
 		receiver = new BroadcastReceiver() {
 			
 			@Override
@@ -109,7 +109,7 @@ public class WifiDirectConnect extends Block {
 	public void checkConnectivity(Intent intent) {
 		NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 		WifiP2pInfo wifiP2pInfo = (WifiP2pInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO);
-		Log.d("broadcastreceiver2", "Checking connectivity...\n" + networkInfo.toString() + "\n" + wifiP2pInfo.toString());
+		Log.d("wifidirectconnect", "Checking connectivity...\n" + networkInfo.toString() + "\n" + wifiP2pInfo.toString());
 		if (networkInfo.isConnected()) {
 			manager.requestConnectionInfo(channel, new ConnectionInfoListener() {
 				

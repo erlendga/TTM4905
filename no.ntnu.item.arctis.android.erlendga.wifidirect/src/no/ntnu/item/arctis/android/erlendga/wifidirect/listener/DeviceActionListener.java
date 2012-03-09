@@ -9,8 +9,6 @@ public interface DeviceActionListener {
     
     void cancelDiscoverPeers();
 
-	void onActivityResultDeviceDetailFragment(Intent intent);
-
 	void connect(WifiP2pConfig config);
 
 	void disconnect();
@@ -18,4 +16,6 @@ public interface DeviceActionListener {
 	void groupInfo();
 
 	void back();
+
+	void takePhoto(Intent data);
 }
