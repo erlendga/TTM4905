@@ -19,4 +19,5 @@
     <string name="label_me">Status</string>
     <string name="label_peers">Peers</string>
     <string name="app_description">An application for Wi-Fi Direct connectivity</string>
+    <string name="group_owner_switch">Group Owner</string>
 </resources>
