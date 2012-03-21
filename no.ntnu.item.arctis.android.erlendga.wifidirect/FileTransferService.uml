@@ -6,9 +6,7 @@
         <region xmi:id="_AVFSQmn7EeGTlN6UOxl_EA" name="&lt;region>">
           <subvertex xmi:type="uml:Pseudostate" xmi:id="_AVFSQ2n7EeGTlN6UOxl_EA" name="&lt;initial>"/>
           <subvertex xmi:type="uml:State" xmi:id="_jQqkAGn-EeGTlN6UOxl_EA" name="active"/>
-          <subvertex xmi:type="uml:FinalState" xmi:id="_kA68QGn-EeGTlN6UOxl_EA" name="&lt;final>"/>
           <subvertex xmi:type="uml:FinalState" xmi:id="_lG33sGn-EeGTlN6UOxl_EA" name="&lt;final>"/>
-          <subvertex xmi:type="uml:FinalState" xmi:id="_jCL3kGoIEeGTlN6UOxl_EA" name="&lt;final>"/>
           <subvertex xmi:type="uml:FinalState" xmi:id="_hfWcwGoREeGTlN6UOxl_EA" name="&lt;final>"/>
           <transition xmi:id="_jQlEcGn-EeGTlN6UOxl_EA" name="listen / " source="_AVFSQ2n7EeGTlN6UOxl_EA" target="_jQqkAGn-EeGTlN6UOxl_EA"/>
           <transition xmi:id="_kA4gAGn-EeGTlN6UOxl_EA" name=" / success" source="_jQqkAGn-EeGTlN6UOxl_EA" target="_jQqkAGn-EeGTlN6UOxl_EA"/>
@@ -28,26 +26,38 @@
       <ownedOperation xmi:id="_kmLdEGoMEeGTlN6UOxl_EA" name="run"/>
       <ownedOperation xmi:id="_zbqt0GoQEeGTlN6UOxl_EA" name="onCancelled"/>
       <ownedParameter xmi:id="_taHnoGn7EeGTlN6UOxl_EA" name="transfer" type="_vzboYGn7EeGTlN6UOxl_EA" isStream="true"/>
-      <ownedParameter xmi:id="_cxXQMGn8EeGTlN6UOxl_EA" name="socketTimeout" type="_cxWpIGn8EeGTlN6UOxl_EA">
-        <defaultValue xmi:type="uml:LiteralInteger" xmi:id="_cxX3QGn8EeGTlN6UOxl_EA" name="socketTimeout" type="_cxWpIGn8EeGTlN6UOxl_EA" value="5000"/>
-      </ownedParameter>
       <ownedParameter xmi:id="_X_LBoGn-EeGTlN6UOxl_EA" name="success" direction="out" isStream="true"/>
       <ownedParameter xmi:id="_bjZ9YGn-EeGTlN6UOxl_EA" name="exception" parameterSet="_bjakcGn-EeGTlN6UOxl_EA" direction="out"/>
-      <ownedParameter xmi:id="_js6zcWoEEeGTlN6UOxl_EA" name="filename" type="_js6zcGoEEeGTlN6UOxl_EA">
-        <defaultValue xmi:type="uml:LiteralString" xmi:id="_js7agGoEEeGTlN6UOxl_EA" name="filename" type="_js6zcGoEEeGTlN6UOxl_EA" value="wifip2pshared-"/>
-      </ownedParameter>
-      <ownedParameter xmi:id="_q3s_IGoEEeGTlN6UOxl_EA" name="postfix" type="_js6zcGoEEeGTlN6UOxl_EA">
-        <defaultValue xmi:type="uml:LiteralString" xmi:id="_q3s_IWoEEeGTlN6UOxl_EA" name="postfix" type="_js6zcGoEEeGTlN6UOxl_EA" value="jpg"/>
-      </ownedParameter>
-      <ownedParameter xmi:id="_jwIDAGoFEeGTlN6UOxl_EA" name="port" type="_cxWpIGn8EeGTlN6UOxl_EA">
-        <defaultValue xmi:type="uml:LiteralInteger" xmi:id="_jwIqEGoFEeGTlN6UOxl_EA" name="port" type="_cxWpIGn8EeGTlN6UOxl_EA" value="8989"/>
-      </ownedParameter>
       <ownedParameter xmi:id="_lUKBkGoFEeGTlN6UOxl_EA" name="listen"/>
       <ownedParameter xmi:id="_qhJq4GoFEeGTlN6UOxl_EA" name="received" type="_js6zcGoEEeGTlN6UOxl_EA" direction="out" isStream="true"/>
       <ownedParameter xmi:id="_aqZYIGoGEeGTlN6UOxl_EA" name="cancel" isStream="true"/>
       <ownedParameter xmi:id="_eiuUkGoGEeGTlN6UOxl_EA" name="cancelled" parameterSet="_eivisGoGEeGTlN6UOxl_EA" direction="out"/>
       <ownedParameter xmi:id="_DuvwMGoQEeGTlN6UOxl_EA" name="stop" isStream="true"/>
       <ownedParameter xmi:id="_6qiIQGoQEeGTlN6UOxl_EA" name="stopped" parameterSet="_6qivUGoQEeGTlN6UOxl_EA" direction="out"/>
+      <ownedParameter xmi:id="_wwjEUHJ0EeGhXoBnHKZ0YQ" name="socketTimeout" type="_cxWpIGn8EeGTlN6UOxl_EA">
+        <ownedComment xmi:id="_wwkScHJ0EeGhXoBnHKZ0YQ">
+          <body>The timeout value in milliseconds or 0 for an infinite timeout when the socket is trying to connect to the remote address.</body>
+        </ownedComment>
+        <defaultValue xmi:type="uml:LiteralInteger" xmi:id="_wwjrYHJ0EeGhXoBnHKZ0YQ" name="socketTimeout" type="_cxWpIGn8EeGTlN6UOxl_EA" value="5000"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_OYCGkHJ1EeGhXoBnHKZ0YQ" name="filename" type="_js6zcGoEEeGTlN6UOxl_EA">
+        <ownedComment xmi:id="_OYD7wHJ1EeGhXoBnHKZ0YQ">
+          <body>The name of the received file. The current system time in milliseconds will be appended to this name.</body>
+        </ownedComment>
+        <defaultValue xmi:type="uml:LiteralString" xmi:id="_OYDUsHJ1EeGhXoBnHKZ0YQ" name="filename" type="_js6zcGoEEeGTlN6UOxl_EA" value="wifip2pshared-"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_cxHsAHJ1EeGhXoBnHKZ0YQ" name="postfix" type="_js6zcGoEEeGTlN6UOxl_EA">
+        <ownedComment xmi:id="_cxJhMHJ1EeGhXoBnHKZ0YQ">
+          <body>The postfix that will be appended on the received file.</body>
+        </ownedComment>
+        <defaultValue xmi:type="uml:LiteralString" xmi:id="_cxITEHJ1EeGhXoBnHKZ0YQ" name="postfix" type="_js6zcGoEEeGTlN6UOxl_EA" value="jpg"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_f8TOkHJ1EeGhXoBnHKZ0YQ" name="port" type="_cxWpIGn8EeGTlN6UOxl_EA">
+        <ownedComment xmi:id="_f8VDwHJ1EeGhXoBnHKZ0YQ">
+          <body>The port number.</body>
+        </ownedComment>
+        <defaultValue xmi:type="uml:LiteralInteger" xmi:id="_f8T1oHJ1EeGhXoBnHKZ0YQ" name="port" type="_cxWpIGn8EeGTlN6UOxl_EA" value="8989"/>
+      </ownedParameter>
       <ownedParameterSet xmi:id="_X_LosGn-EeGTlN6UOxl_EA" name="success"/>
       <ownedParameterSet xmi:id="_bjakcGn-EeGTlN6UOxl_EA" name="exception" parameter="_bjZ9YGn-EeGTlN6UOxl_EA"/>
       <ownedParameterSet xmi:id="_4ed6UGoFEeGTlN6UOxl_EA" name="received"/>

@@ -23,6 +23,8 @@ import android.util.Log;
 public class FileTransferService extends Block {
 
 	private static final String TAG = "filetransferservice";
+	private Handler handler = new Handler(Looper.getMainLooper());
+	private AsyncTask<Void, Void, String> asyncTask;
 	// Instance parameter. Edit only in overview page.
 	public final int socketTimeout;
 	// Instance parameter. Edit only in overview page.
@@ -31,9 +33,6 @@ public class FileTransferService extends Block {
 	public final java.lang.String postfix;
 	// Instance parameter. Edit only in overview page.
 	public final int port;
-	
-	private Handler handler = new Handler(Looper.getMainLooper());
-	private AsyncTask<Void, Void, String> asyncTask;
 	
 	public void transfer(FileTransferServiceInfo info) {
 		Socket socket = new Socket();
@@ -44,7 +43,7 @@ public class FileTransferService extends Block {
 			ContentResolver cr = getContext().getContentResolver();
 			InputStream is = null;
 			try {
-				is = cr.openInputStream(Uri.parse(info.filePath));
+				is = cr.openInputStream(Uri.parse(info.URIFilePath));
 			} catch (FileNotFoundException e) {
 				Log.e(TAG, e.getMessage());
 				sendToBlock("EXCEPTION");
@@ -159,15 +158,15 @@ public class FileTransferService extends Block {
 
     }
 
+	public void cancel() {
+		asyncTask.cancel(true);
+	}
+
 	// Do not edit this constructor.
 	public FileTransferService(int socketTimeout, java.lang.String filename, java.lang.String postfix, int port) {
 	    this.socketTimeout = socketTimeout;
 	    this.filename = filename;
 	    this.postfix = postfix;
 	    this.port = port;
-	}
-
-	public void cancel() {
-		asyncTask.cancel(false);
 	}
 }

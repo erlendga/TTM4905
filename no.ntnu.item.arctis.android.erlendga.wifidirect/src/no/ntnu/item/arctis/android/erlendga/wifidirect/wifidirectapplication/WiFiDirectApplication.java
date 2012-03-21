@@ -2,26 +2,33 @@ package no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectapplication;
 
 
 import java.io.File;
-import java.net.Socket;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import no.ntnu.item.arctis.android.R;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.discover.DiscoverInfo;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.filetransferservice.FileTransferServiceInfo;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.CameraFragment;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceDetailFragment;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceListFragment;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectconnect.WifiDirectConnectInfo;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectreceive.WifiDirectReceiveInfo;
 import no.ntnu.item.arctis.examples.realtransmissions.Message;
 import no.ntnu.item.arctis.runtime.Block;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
-import android.net.NetworkInfo;
+import android.hardware.Camera;
+import android.hardware.Camera.AutoFocusCallback;
+import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.ShutterCallback;
 import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
@@ -32,14 +39,17 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
-import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
-import android.net.wifi.p2p.WifiP2pManager.GroupInfoListener;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceHolder.Callback;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,13 +63,11 @@ public class WiFiDirectApplication extends Block {
 	public WiFiDirectApplicationActivity activity;
 	public boolean wifiP2pStateEnabled = false;
 	public boolean progressBarVisible = false;
-	private BroadcastReceiver receiver;
 	public android.view.Menu menu;
 	public WifiP2pInfo connectionInfo;
 	public WifiP2pGroup groupInfo;
 	private WifiP2pDevice device;
 	private List<WifiP2pDevice> connectionList = new ArrayList<WifiP2pDevice>();
-	private Socket clientSocket;
 	private List<WifiP2pInfo> connectionInfoList = new ArrayList<WifiP2pInfo>();
 	public no.ntnu.item.arctis.android.erlendga.wifidirect.groupowner.GroupOwnerInfo groupOwnerInfo;
 	public final int port = 8988;
@@ -68,9 +76,18 @@ public class WiFiDirectApplication extends Block {
 	public static final String MESSAGE_SUFFIX = "</v:Envelope>";
 	private static final int START_CAMERA = 0;
 	private static final int TAKE_PHOTO_CODE = 20;
+	private Switch groupOwnerSwitch;
 	
 	public void initialize() {
 		manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
+		
+		activity.runOnUiThread(new Runnable() {
+
+			public void run() {
+				groupOwnerSwitch = (Switch) activity.findViewById(R.id.group_owner_switch);
+			}
+		});
+		
 		channel = manager.initialize(activity, activity.getMainLooper(), new ChannelListener() {
 			
 			public void onChannelDisconnected() {
@@ -99,7 +116,6 @@ public class WiFiDirectApplication extends Block {
 				});
 			}
 		});
-		sendToBlock("LISTEN");
 		activity.setParentID(blockID);
 	}
 
@@ -128,7 +144,11 @@ public class WiFiDirectApplication extends Block {
 				WifiP2pConfig config = new WifiP2pConfig();
 				config.deviceAddress = device.deviceAddress;
 	            config.wps.setup = WpsInfo.PBC;
-				connectionList.add(device);			
+	            if (groupOwnerSwitch.isChecked()) {
+	            	config.groupOwnerIntent = 15;
+				}
+				else config.groupOwnerIntent = 0;
+				connectionList.add(device);
 		        sendToBlock("CONNECT", config);
 			}
 		}
@@ -266,25 +286,23 @@ public class WiFiDirectApplication extends Block {
 		});
 	}
 
-	public ArrayList<Object> initDiscover() {
+	public DiscoverInfo initDiscover() {
 		if (!connectionList.isEmpty()) {
 			connectionList.clear();
 		}
-		ArrayList<Object> objects = new ArrayList<Object>();
-		objects.add(channel);
-		objects.add(wifiP2pStateEnabled);
-		objects.add(manager);
-		return objects;
+		DiscoverInfo discoverInfo = new DiscoverInfo();
+		discoverInfo.channel = channel;
+		discoverInfo.wifiP2pStateEnabled = wifiP2pStateEnabled;
+		discoverInfo.manager = manager;
+		return discoverInfo;
 	}
 
-	public ArrayList<Object> initWifiDirectConnect(WifiP2pConfig config) {
-		Log.d(TAG, "Connect button is clicked. Starting Wifi Direct Connect block...");
-		ArrayList<Object> objects = new ArrayList<Object>();
-		objects.add(channel);
-		objects.add(config);
-		objects.add(wifiP2pStateEnabled);
-		objects.add(manager);
-		return objects;
+	public WifiDirectConnectInfo initWifiDirectConnect(WifiP2pConfig config) {
+		WifiDirectConnectInfo connectInfo = new WifiDirectConnectInfo();
+		connectInfo.channel = channel;
+		connectInfo.config = config;
+		connectInfo.manager = manager;
+		return connectInfo;
 	}
 	
 	/** The connection operation is successful. The progress dialog is dismissed and a cancel connect operation will not be able to be performed.
@@ -321,13 +339,6 @@ public class WiFiDirectApplication extends Block {
 	public void updateConnectionInfo() {
         enableProgressBar(false);
         
-        activity.runOnUiThread(new Runnable() {
-					
-			public void run() {
-				Toast.makeText(activity, "Connection is successful", Toast.LENGTH_SHORT).show();
-			}
-		});
-        
         if (!connectionInfoList.contains(connectionInfo)) {
 			activity.runOnUiThread(new Runnable() {
 			
@@ -360,9 +371,16 @@ public class WiFiDirectApplication extends Block {
     	return activity;
 	}
 	
-	public FileTransferServiceInfo transfer(final Intent intent) {
+	public FileTransferServiceInfo transfer(URI uri) {
+//		activity.runOnUiThread(new Runnable() {
+//		
+//			public void run() {
+//				getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.GONE);
+//			}
+//		});
+		
 		FileTransferServiceInfo info = new FileTransferServiceInfo();
-		info.filePath = Uri.fromFile(getTempFile()).toString();
+		info.URIFilePath = uri.toString();
 		info.receiverIP = senderIP;
 		return info;
 	}
@@ -376,74 +394,6 @@ public class WiFiDirectApplication extends Block {
 				getDeviceDetailFragment().resetViews();
 			}
 		});
-	}
-
-	public void registerBroadcastReceiver() {
-		receiver = new BroadcastReceiver() {
-			
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				String action = intent.getAction();
-				
-				if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-					sendToBlock("WIFI_P2P_STATE_CHANGED_ACTION", intent);
-				}
-				else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-					sendToBlock("WIFI_P2P_THIS_DEVICE_CHANGED_ACTION", intent);
-				}
-				else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-					sendToBlock("WIFI_P2P_CONNECTION_CHANGED_ACTION", intent);
-				}
-			}
-		};
-		
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-		filter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-		filter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-		
-		getContext().registerReceiver(receiver, filter);
-	}
-	
-	private Context getContext() {
-		return (Context) getProperty("Android");
-	}
-
-	public boolean isWifiP2pStateEnabled(Intent intent) {
-		int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
-		if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-			return true;
-		}
-		else return false;
-	}
-
-	public WifiP2pDevice getWifiP2pDevice(Intent intent) {
-		return (WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-	}
-
-	public void unregisterBroadcastReceiver() {
-		getContext().unregisterReceiver(receiver);
-	}
-
-	public void checkConnectivity(Intent intent) {
-		NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-		WifiP2pInfo wifiP2pInfo = (WifiP2pInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO);
-		Log.d("broadcastreceiver2", "Checking connectivity...\n" + networkInfo.toString() + "\n" + wifiP2pInfo.toString());
-		if (networkInfo.isConnected()) {
-			manager.requestConnectionInfo(channel, new ConnectionInfoListener() {
-				
-				public void onConnectionInfoAvailable(WifiP2pInfo connectionInfo) {
-					sendToBlock("ON_CONNECTION_INFO_AVAILABLE", connectionInfo);
-				}
-			});
-			manager.requestGroupInfo(channel, new GroupInfoListener() {
-				
-				public void onGroupInfoAvailable(WifiP2pGroup groupInfo) {
-					sendToBlock("ON_GROUP_INFO_AVAILABLE", groupInfo);
-				}
-			});
-		}
-		else sendToBlock("NOT_CONNECTED");
 	}
 
 	public void showGroupInfo() {
@@ -461,7 +411,9 @@ public class WiFiDirectApplication extends Block {
 				((TextView)getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.interface_name)).setText("Interface Name: " + groupInfo.getInterface());
 				((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.network_name)).setText("SSID: " + groupInfo.getNetworkName());
 				((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.go_ip_address)).setText("Group Owner IP Address: " + connectionInfo.groupOwnerAddress.getHostAddress());
-				((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.is_go)).setText("Is Group Owner: " + ((groupInfo.isGroupOwner() == true) ? getDeviceDetailFragment().getResources().getString(R.string.yes) : getDeviceDetailFragment().getResources().getString(R.string.no)));
+				((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.is_go))
+					.setText("Is Group Owner: " 
+							+ ((groupInfo.isGroupOwner() == true) ? getDeviceDetailFragment().getResources().getString(R.string.yes) : getDeviceDetailFragment().getResources().getString(R.string.no)));
 				if (connectionInfo.isGroupOwner) {
 					if (senderIP != null) {
 						((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.clients)).setText("Client IP Address: " + senderIP);
@@ -477,6 +429,7 @@ public class WiFiDirectApplication extends Block {
 			
 			public void run() {
 				if (connectionInfo.groupFormed) {
+					getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.GONE);
 					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.frag_detail).setVisibility(View.VISIBLE);
 				
 					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.detail_view).setVisibility(View.VISIBLE);
@@ -493,7 +446,7 @@ public class WiFiDirectApplication extends Block {
 			}
 		});
 	}
-	
+
 	private File getTempFile() {
 		final File path = new File(Environment.getExternalStorageDirectory(), activity.getPackageName());
 		if (!path.exists()) {
@@ -502,9 +455,21 @@ public class WiFiDirectApplication extends Block {
 		return new File(path, "image.tmp");
 	}
 
+	//TODO: Fjerne intent
 	public void startCamera(Intent intent) {	
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile()));
-		getDeviceDetailFragment().startActivityForResult(intent, TAKE_PHOTO_CODE);
+	
+		activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.VISIBLE);
+				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.frag_detail).setVisibility(View.GONE);
+				getCameraFragment().takePicture();
+			}
+		});
+	}
+	
+	private CameraFragment getCameraFragment() {
+		return (CameraFragment) activity.getFragmentManager().findFragmentById(R.id.camera);
 	}
 
 	public Message serialize(int prefix) {
@@ -553,5 +518,12 @@ public class WiFiDirectApplication extends Block {
 			intent.setDataAndType(Uri.parse("file://" + result), "image/*");
 			activity.startActivity(intent);
 		}
+	}
+
+	public WifiDirectReceiveInfo initWifiDirectReceive() {
+		WifiDirectReceiveInfo receiveInfo = new WifiDirectReceiveInfo();
+		receiveInfo.channel = channel;
+		receiveInfo.manager = manager;
+		return receiveInfo;
 	}
 }

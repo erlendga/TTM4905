@@ -1,7 +1,7 @@
 package no.ntnu.item.arctis.android.erlendga.wifidirect.discover;
 
-import java.util.ArrayList;
-
+import no.ntnu.item.arctis.android.erlendga.wifidirect.discoverpeers.DiscoverPeersInfo;
+import no.ntnu.item.arctis.runtime.Block;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,38 +10,25 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
-import android.util.Log;
-
-import no.ntnu.item.arctis.runtime.Block;
 
 public class Discover extends Block {
 
-	private static final String TAG = "discover";
 	public boolean isWifiP2pEnabled;
 	private Channel channel;
 	private WifiP2pManager manager;
 	private BroadcastReceiver receiver;
 	
-	public void unwrap(ArrayList<Object> objects) {
-		Log.d(TAG, "Inside Discovery block. Unwrapping.");
-		channel = (Channel) objects.get(0);
-		isWifiP2pEnabled = (Boolean) objects.get(1);
-		manager = (WifiP2pManager) objects.get(2);
+	public void unwrap(DiscoverInfo discoverInfo) {
+		channel = discoverInfo.channel;
+		isWifiP2pEnabled = discoverInfo.wifiP2pStateEnabled;
+		manager = discoverInfo.manager;
 	}
 
-	public ArrayList<Object> initDiscoverPeers() {
-		Log.d(TAG, "Initiating a discovery. Going into Discover Peers block...");
-		ArrayList<Object> objects = new ArrayList<Object>();
-		objects.add(channel);
-		objects.add(manager);
-		return objects;
-	}
-
-	public ArrayList<Object> wrap() {
-		ArrayList<Object> objects = new ArrayList<Object>();
-		objects.add(channel);
-		objects.add(manager);
-		return objects;
+	public DiscoverPeersInfo initDiscoverPeers() {
+		DiscoverPeersInfo discoverPeersInfo = new DiscoverPeersInfo();
+		discoverPeersInfo.channel = channel;
+		discoverPeersInfo.manager = manager;
+		return discoverPeersInfo;
 	}
 
 	public void registerBroadcastReceiver() {

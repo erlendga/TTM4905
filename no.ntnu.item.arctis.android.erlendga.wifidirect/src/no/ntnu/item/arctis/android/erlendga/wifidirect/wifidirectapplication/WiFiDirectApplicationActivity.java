@@ -1,5 +1,6 @@
 package no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectapplication;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +99,7 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 		sendSignalToBuildingBlock("BACK");
 	}
 
-	public void takePhoto(Intent data) {
-		sendSignalToBuildingBlockWithObject("TAKE_PHOTO", data);
+	public void takePhoto(URI uri) {
+		sendSignalToBuildingBlockWithObject("TAKE_PHOTO", uri);
 	}
 }

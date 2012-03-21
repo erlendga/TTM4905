@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -23,5 +24,12 @@
             android:layout_height="match_parent">
             <!-- Preview: layout=@layout/device_detail -->
         </fragment>
-    </LinearLayout>
+        <fragment
+            class="no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.CameraFragment"
+            android:id="@+id/camera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <!-- Preview: layout=@layout/camera -->
+        </fragment>
+    </LinearLayout>   
 </LinearLayout>

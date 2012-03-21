@@ -1,6 +1,7 @@
 package no.ntnu.item.arctis.android.erlendga.wifidirect.listener;
 
-import android.content.Intent;
+import java.net.URI;
+
 import android.net.wifi.p2p.WifiP2pConfig;
 
 public interface DeviceActionListener {
@@ -17,5 +18,5 @@ public interface DeviceActionListener {
 
 	void back();
 
-	void takePhoto(Intent data);
+	void takePhoto(URI uri);
 }

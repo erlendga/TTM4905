@@ -16,7 +16,7 @@
       <ownedOperation xmi:id="_ArifsFFrEeG7lcN5lvSDfA" name="discoverPeers"/>
       <ownedOperation xmi:id="_cJOcgFFuEeGh1M31yk2rVQ" name="onFailure"/>
       <ownedOperation xmi:id="_cJPDkFFuEeGh1M31yk2rVQ" name="onSuccess"/>
-      <ownedParameter xmi:id="_3edsIFFqEeG7lcN5lvSDfA" name="start" type="_7kP1wFFqEeG7lcN5lvSDfA"/>
+      <ownedParameter xmi:id="_3edsIFFqEeG7lcN5lvSDfA" name="start" type="_BOX48HKGEeGhXoBnHKZ0YQ"/>
       <ownedParameter xmi:id="_11to0FFuEeGl3r7e8H5bMA" name="onSuccess" parameterSet="_gIX28FJQEeGYe7vbaIzGBw" direction="out"/>
       <ownedParameter xmi:id="_27LcEFFuEeGl3r7e8H5bMA" name="onFailure" type="_zOwYMFFvEeGl3r7e8H5bMA" parameterSet="_gqmaQFJQEeGYe7vbaIzGBw" direction="out"/>
       <ownedParameter xmi:id="_39IBQFFuEeGl3r7e8H5bMA" name="stop" isStream="true"/>
@@ -24,9 +24,9 @@
       <ownedParameterSet xmi:id="_gIX28FJQEeGYe7vbaIzGBw" name="onSuccess" parameter="_11to0FFuEeGl3r7e8H5bMA"/>
       <ownedParameterSet xmi:id="_gqmaQFJQEeGYe7vbaIzGBw" name="onFailure" parameter="_27LcEFFuEeGl3r7e8H5bMA"/>
       <ownedParameterSet xmi:id="_GQP48FMtEeGDQM1GTnrQiA" name="stopped" parameter="_47fG8FFuEeGl3r7e8H5bMA"/>
-      <node xmi:type="uml:ActivityParameterNode" xmi:id="_3eVJQFFqEeG7lcN5lvSDfA" name="start" outgoing="_dpWygFFuEeGh1M31yk2rVQ" inPartition="_m1C4QFFpEeG7lcN5lvSDfA" type="_7kP1wFFqEeG7lcN5lvSDfA" parameter="_3edsIFFqEeG7lcN5lvSDfA"/>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="_3eVJQFFqEeG7lcN5lvSDfA" name="start" outgoing="_dpWygFFuEeGh1M31yk2rVQ" inPartition="_m1C4QFFpEeG7lcN5lvSDfA" type="_BOX48HKGEeGhXoBnHKZ0YQ" parameter="_3edsIFFqEeG7lcN5lvSDfA"/>
       <node xmi:type="uml:CallOperationAction" xmi:id="_Arh4oFFrEeG7lcN5lvSDfA" name="o0" outgoing="_yoT4sFFuEeGl3r7e8H5bMA" inPartition="_m1C4QFFpEeG7lcN5lvSDfA" operation="_ArifsFFrEeG7lcN5lvSDfA">
-        <argument xmi:id="_cJPqoFFuEeGh1M31yk2rVQ" name="channelAndManagerList" incoming="_dpWygFFuEeGh1M31yk2rVQ" inPartition="_m1C4QFFpEeG7lcN5lvSDfA" type="_7kP1wFFqEeG7lcN5lvSDfA"/>
+        <argument xmi:id="_H_xUQHKGEeGhXoBnHKZ0YQ" name="discoverPeersInfo" incoming="_dpWygFFuEeGh1M31yk2rVQ" inPartition="_m1C4QFFpEeG7lcN5lvSDfA" type="_BOX48HKGEeGhXoBnHKZ0YQ"/>
       </node>
       <node xmi:type="uml:ForkNode" xmi:id="_ryIrEFFuEeGl3r7e8H5bMA" name="f0" outgoing="_yzZuYFFuEeGl3r7e8H5bMA _zAVXIFFuEeGl3r7e8H5bMA" incoming="_yoT4sFFuEeGl3r7e8H5bMA" inPartition="_m1C4QFFpEeG7lcN5lvSDfA"/>
       <node xmi:type="uml:AcceptEventAction" xmi:id="_vw18UVFuEeGl3r7e8H5bMA" name="r0" outgoing="_CLw_gFFvEeGl3r7e8H5bMA" incoming="_yzZuYFFuEeGl3r7e8H5bMA" inPartition="_m1C4QFFpEeG7lcN5lvSDfA">
@@ -38,13 +38,13 @@
       </node>
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_11rzoFFuEeGl3r7e8H5bMA" name="onSuccess" incoming="_CLw_gFFvEeGl3r7e8H5bMA" inPartition="_m1C4QFFpEeG7lcN5lvSDfA" parameter="_11to0FFuEeGl3r7e8H5bMA"/>
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_27KN8FFuEeGl3r7e8H5bMA" name="onFailure" incoming="_4FCxsFFvEeGl3r7e8H5bMA" inPartition="_m1C4QFFpEeG7lcN5lvSDfA" type="_zOwYMFFvEeGl3r7e8H5bMA" parameter="_27LcEFFuEeGl3r7e8H5bMA"/>
-      <edge xmi:type="uml:ObjectFlow" xmi:id="_dpWygFFuEeGh1M31yk2rVQ" name="e0" source="_3eVJQFFqEeG7lcN5lvSDfA" target="_cJPqoFFuEeGh1M31yk2rVQ" inPartition="_m1C4QFFpEeG7lcN5lvSDfA"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_dpWygFFuEeGh1M31yk2rVQ" name="e0" source="_3eVJQFFqEeG7lcN5lvSDfA" target="_H_xUQHKGEeGhXoBnHKZ0YQ" inPartition="_m1C4QFFpEeG7lcN5lvSDfA"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_yoT4sFFuEeGl3r7e8H5bMA" name="e1" source="_Arh4oFFrEeG7lcN5lvSDfA" target="_ryIrEFFuEeGl3r7e8H5bMA" inPartition="_m1C4QFFpEeG7lcN5lvSDfA"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_yzZuYFFuEeGl3r7e8H5bMA" name="e2" source="_ryIrEFFuEeGl3r7e8H5bMA" target="_vw18UVFuEeGl3r7e8H5bMA" inPartition="_m1C4QFFpEeG7lcN5lvSDfA"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_zAVXIFFuEeGl3r7e8H5bMA" name="e3" source="_ryIrEFFuEeGl3r7e8H5bMA" target="_x-Yx8VFuEeGl3r7e8H5bMA" inPartition="_m1C4QFFpEeG7lcN5lvSDfA"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_CLw_gFFvEeGl3r7e8H5bMA" name="e4" source="_vw18UVFuEeGl3r7e8H5bMA" target="_11rzoFFuEeGl3r7e8H5bMA" inPartition="_m1C4QFFpEeG7lcN5lvSDfA"/>
       <edge xmi:type="uml:ObjectFlow" xmi:id="_4FCxsFFvEeGl3r7e8H5bMA" name="e5" source="_zjDNMFFvEeGl3r7e8H5bMA" target="_27KN8FFuEeGl3r7e8H5bMA" inPartition="_m1C4QFFpEeG7lcN5lvSDfA"/>
-      <group xmi:type="uml:ActivityPartition" xmi:id="_m1C4QFFpEeG7lcN5lvSDfA" name="main" node="_3eVJQFFqEeG7lcN5lvSDfA _Arh4oFFrEeG7lcN5lvSDfA _cJPqoFFuEeGh1M31yk2rVQ _ryIrEFFuEeGl3r7e8H5bMA _vw18UVFuEeGl3r7e8H5bMA _x-Yx8VFuEeGl3r7e8H5bMA _11rzoFFuEeGl3r7e8H5bMA _27KN8FFuEeGl3r7e8H5bMA _zjDNMFFvEeGl3r7e8H5bMA" edge="_dpWygFFuEeGh1M31yk2rVQ _yoT4sFFuEeGl3r7e8H5bMA _yzZuYFFuEeGl3r7e8H5bMA _zAVXIFFuEeGl3r7e8H5bMA _CLw_gFFvEeGl3r7e8H5bMA _4FCxsFFvEeGl3r7e8H5bMA"/>
+      <group xmi:type="uml:ActivityPartition" xmi:id="_m1C4QFFpEeG7lcN5lvSDfA" name="main" node="_3eVJQFFqEeG7lcN5lvSDfA _Arh4oFFrEeG7lcN5lvSDfA _ryIrEFFuEeGl3r7e8H5bMA _vw18UVFuEeGl3r7e8H5bMA _x-Yx8VFuEeGl3r7e8H5bMA _11rzoFFuEeGl3r7e8H5bMA _27KN8FFuEeGl3r7e8H5bMA _zjDNMFFvEeGl3r7e8H5bMA _H_xUQHKGEeGhXoBnHKZ0YQ" edge="_dpWygFFuEeGh1M31yk2rVQ _yoT4sFFuEeGl3r7e8H5bMA _yzZuYFFuEeGl3r7e8H5bMA _zAVXIFFuEeGl3r7e8H5bMA _CLw_gFFvEeGl3r7e8H5bMA _4FCxsFFvEeGl3r7e8H5bMA"/>
     </packagedElement>
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_7kP1wFFqEeG7lcN5lvSDfA" name="java.util.ArrayList&lt;java.lang.Object>"/>
     <packagedElement xmi:type="uml:Signal" xmi:id="_vwXbMFFuEeGl3r7e8H5bMA" name="ON_SUCCESS"/>
@@ -56,6 +56,7 @@
     <packagedElement xmi:type="uml:SignalEvent" xmi:id="_x-Yx8FFuEeGl3r7e8H5bMA" name="r1"/>
     <packagedElement xmi:type="uml:SignalEvent" xmi:id="_x-b1QFFuEeGl3r7e8H5bMA" name="" signal="_x96Q0FFuEeGl3r7e8H5bMA"/>
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_zOwYMFFvEeGl3r7e8H5bMA" name="int"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_BOX48HKGEeGhXoBnHKZ0YQ" name="no.ntnu.item.arctis.android.erlendga.wifidirect.discoverpeers.DiscoverPeersInfo"/>
     <profileApplication xmi:id="_m09YsFFpEeG7lcN5lvSDfA">
       <eAnnotations xmi:id="_m1BqIFFpEeG7lcN5lvSDfA" source="http://www.eclipse.org/uml2/2.0.0/UML">
         <references xmi:type="ecore:EPackage" href="pathmap://ARCTIS_PROFILES/arctis.profile.uml#_WFTqUXjGEdyxtoUMycQn9Q"/>
@@ -72,7 +73,7 @@
   <graphics:Shape xmi:id="_m1DfUlFpEeG7lcN5lvSDfA" x="180" y="54" width="415" height="55" base_Element="_m1BqIVFpEeG7lcN5lvSDfA"/>
   <graphics:Shape xmi:id="_m1DfU1FpEeG7lcN5lvSDfA" x="180" y="108" width="415" height="109" base_Element="_m1C4QFFpEeG7lcN5lvSDfA"/>
   <arctis:esm xmi:id="_m1EGYFFpEeG7lcN5lvSDfA" base_StateMachine="_m1DfVFFpEeG7lcN5lvSDfA"/>
-  <graphics:Shape xmi:id="_4EOEkFFqEeG7lcN5lvSDfA" x="90" y="162" base_Element="_3eVJQFFqEeG7lcN5lvSDfA" orientation="west"/>
+  <graphics:Shape xmi:id="_4EOEkFFqEeG7lcN5lvSDfA" x="36" y="162" base_Element="_3eVJQFFqEeG7lcN5lvSDfA" orientation="west"/>
   <graphics:Shape xmi:id="_Arp0cFFrEeG7lcN5lvSDfA" x="198" y="144" width="200" height="55" base_Element="_Arh4oFFrEeG7lcN5lvSDfA" orientation="east"/>
   <graphics:Shape xmi:id="_r08ugFFuEeGl3r7e8H5bMA" x="396" y="126" width="19" height="91" base_Element="_ryIrEFFuEeGl3r7e8H5bMA" orientation="east"/>
   <graphics:Shape xmi:id="_vw8qAFFuEeGl3r7e8H5bMA" x="414" y="126" width="163" height="55" base_Element="_vw18UVFuEeGl3r7e8H5bMA"/>

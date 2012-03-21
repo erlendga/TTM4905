@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <block
-    name="Check Connectivity" 
-    uuid="_TgJAcFPXEeGUZMZzGbmuzw" 
+    name="Wifi Direct Receive" 
+    uuid="_pG8pIHKJEeGhXoBnHKZ0YQ" 
     status="under construction" 
     type="block" 
     >

@@ -1,7 +1,8 @@
 package no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectconnect;
 
-import java.util.ArrayList;
-
+import no.ntnu.item.arctis.android.erlendga.wifidirect.cancelconnect.CancelConnectInfo;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.connect.ConnectInfo;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.removegroup.RemoveGroupInfo;
 import no.ntnu.item.arctis.runtime.Block;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,69 +20,39 @@ import android.util.Log;
 
 public class WifiDirectConnect extends Block {
 
-	private static final String TAG = "wifidirectconnect";
 	private Channel channel;
 	private WifiP2pConfig config;
 	private WifiP2pManager manager;
-	public boolean isWifiP2pEnabled;
-	public boolean isConnected;
 	
-	// Instance parameter. Edit only in overview page.
-	public final int channelElement;
-	// Instance parameter. Edit only in overview page.
-	public final int configElement;
-	// Instance parameter. Edit only in overview page.
-	public final int managerElement;
-	// Instance parameter. Edit only in overview page.
-	public final int isWifiP2pEnabledElement;
 	private BroadcastReceiver receiver;
-	
-	public void unwrap(ArrayList<Object> objects) {
-		Log.d(TAG, "Inside Wifi Direct Connect block. Unwrapping.");
-		channel = (Channel) objects.get(channelElement);
-		config = (WifiP2pConfig) objects.get(configElement);
-		isWifiP2pEnabled = (Boolean) objects.get(isWifiP2pEnabledElement);
-		manager = (WifiP2pManager) objects.get(managerElement);
+	public boolean isConnected;
+	public boolean isWifiP2pEnabled;
+	public void unwrap(WifiDirectConnectInfo connectInfo) {
+		channel = connectInfo.channel;
+		config = connectInfo.config;
+		manager = connectInfo.manager;
 	}
 
-	public ArrayList<Object> initConnect() {
-		Log.d(TAG, "Initiating a connect. Going into Connect block...");
-		isConnected = false;
-		ArrayList<Object> objects = new ArrayList<Object>();
-		objects.add(channel);
-		objects.add(config);
-		objects.add(manager);
-		return objects;
-	}
-	
-	private ArrayList<Object> addChannelAndManager() {
-		ArrayList<Object> objects = new ArrayList<Object>();
-		objects.add(channel);
-		objects.add(manager);
-		return objects;
+	public ConnectInfo initConnect() {
+		ConnectInfo connectInfo = new ConnectInfo();
+		connectInfo.channel = channel;
+		connectInfo.config = config;
+		connectInfo.manager = manager;
+		return connectInfo;
 	}
 
-	public ArrayList<Object> initRemoveGroup() {
-		return addChannelAndManager();
+	public RemoveGroupInfo initRemoveGroup() {
+		RemoveGroupInfo removeGroupInfo = new RemoveGroupInfo();
+		removeGroupInfo.channel = channel;
+		removeGroupInfo.manager = manager;
+		return removeGroupInfo;
 	}
 
-	public ArrayList<Object> initCancelConnect() {
-		return addChannelAndManager();
-	}
-
-	// Do not edit this constructor.
-	public WifiDirectConnect(int channelElement, int configElement, int managerElement, int isWifiP2pEnabledElement) {
-	    this.channelElement = channelElement;
-	    this.configElement = configElement;
-	    this.managerElement = managerElement;
-	    this.isWifiP2pEnabledElement = isWifiP2pEnabledElement;
-	}
-
-	public ArrayList<Object> wrap() {
-		ArrayList<Object> objects = new ArrayList<Object>();
-		objects.add(channel);
-		objects.add(manager);
-		return objects;
+	public CancelConnectInfo initCancelConnect() {
+		CancelConnectInfo cancelConnectInfo = new CancelConnectInfo();
+		cancelConnectInfo.channel = channel;
+		cancelConnectInfo.manager = manager;
+		return cancelConnectInfo;
 	}
 
 	public void registerReceiver() {
@@ -129,5 +100,9 @@ public class WifiDirectConnect extends Block {
 
 	public void unregisterBroadcastReceiver() {
 		getContext().unregisterReceiver(receiver);
+	}
+
+	// Do not edit this constructor.
+	public WifiDirectConnect() {
 	}
 }

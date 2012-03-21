@@ -96,7 +96,7 @@ public class DeviceDetailFragment extends Fragment {
     	if (resultCode == Activity.RESULT_OK) {
 			switch (requestCode) {
 			case TAKE_PHOTO_CODE:
-				((DeviceActionListener) getActivity()).takePhoto(data);
+//				((DeviceActionListener) getActivity()).takePhoto(data);
 				break;
 			}
 		}
