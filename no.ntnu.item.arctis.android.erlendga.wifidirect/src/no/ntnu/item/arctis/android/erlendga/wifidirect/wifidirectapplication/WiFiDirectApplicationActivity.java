@@ -99,7 +99,7 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 		sendSignalToBuildingBlock("BACK");
 	}
 
-	public void takePhoto(URI uri) {
-		sendSignalToBuildingBlockWithObject("TAKE_PHOTO", uri);
+	public void sendPhoto(URI uri) {
+		sendSignalToBuildingBlockWithObject("SEND_PHOTO", uri);
 	}
 }

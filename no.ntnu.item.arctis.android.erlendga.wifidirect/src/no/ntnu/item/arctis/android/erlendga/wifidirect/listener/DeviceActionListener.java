@@ -18,5 +18,5 @@ public interface DeviceActionListener {
 
 	void back();
 
-	void takePhoto(URI uri);
+	void sendPhoto(URI uri);
 }

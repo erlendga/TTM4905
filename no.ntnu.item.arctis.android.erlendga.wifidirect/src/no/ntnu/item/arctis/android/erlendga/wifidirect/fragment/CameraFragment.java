@@ -3,20 +3,24 @@ package no.ntnu.item.arctis.android.erlendga.wifidirect.fragment;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import no.ntnu.item.arctis.android.erlendga.wifidirect.listener.DeviceActionListener;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.Context;
-import android.graphics.ImageFormat;
 import android.hardware.Camera;
-import android.os.Build;
+import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.Parameters;
+import android.hardware.Camera.Size;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,18 +29,26 @@ import android.view.WindowManager;
 public class CameraFragment extends Fragment {	
 	
 	protected static final String TAG = "camerafragment";
-	private SurfaceView preview = null;
-	private SurfaceHolder previewHolder = null;
 	private Camera camera = null;
-	private boolean inPreview = false;
+//	private boolean inPreview = false;
+	private Preview preview = null;
+	private int cameraCurrentlyLocked;
+	private int defaultCameraId;
+	private int numberOfCameras;
     
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-
-    	preview = new SurfaceView(this.getActivity());
-        previewHolder = preview.getHolder();
-        previewHolder.addCallback(surfaceCallback);
-        previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    	
+    	preview = new Preview(this.getActivity());
+    	numberOfCameras = Camera.getNumberOfCameras();
+    	
+    	CameraInfo cameraInfo = new CameraInfo();
+    	for (int i = 0; i < numberOfCameras; i++) {
+			Camera.getCameraInfo(i, cameraInfo);
+			if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
+				defaultCameraId = i;
+			}
+		}
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,29 +57,46 @@ public class CameraFragment extends Fragment {
     
     public void onResume() {
     	super.onResume();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-          Camera.CameraInfo info = new Camera.CameraInfo();
-
-          for (int i=0; i < Camera.getNumberOfCameras(); i++) {
-            Camera.getCameraInfo(i, info);
-
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-              camera = Camera.open(i);
-            }
-          }
-        }
-
-        if (camera == null) {
-          camera = Camera.open();
-        }
+    	
+    	camera = Camera.open();
+        cameraCurrentlyLocked = defaultCameraId;
+        preview.setCamera(camera);
+    }
+    
+    public void onPause() {
+	    super.onPause();
+	    
+	    if (camera != null) {
+			preview.setCamera(null);
+			camera.release();
+			camera = null;
+		}
+    }
+    
+    public void switchCamera() {
+    	if (numberOfCameras == 1) {
+			Builder builder = new Builder(this.getActivity());
+			builder.setMessage("This device contains only one camera!").setNeutralButton("Close", null);
+			
+			AlertDialog alert = builder.create();
+			alert.show();
+		}
+    	
+    	if (camera != null) {
+			camera.stopPreview();
+			preview.setCamera(null);
+			camera.release();
+			camera = null;
+		}
+    	
+    	camera = Camera.open((cameraCurrentlyLocked + 1) % numberOfCameras);
+    	cameraCurrentlyLocked = (cameraCurrentlyLocked + 1) % numberOfCameras;
+    	preview.switchCamera(camera);
+    	camera.startPreview();
     }
     
     public void takePicture() {
-    	if (inPreview) {
-            camera.takePicture(null, null, photoCallback);
-            inPreview=false;
-    	}
+        camera.takePicture(shutterCallback, null, photoCallback);
     }
     
     public View getCameraView() {
@@ -78,8 +107,6 @@ public class CameraFragment extends Fragment {
     	
     	public void onPictureTaken(byte[] data, Camera camera) {
     		File photo = new File(Environment.getExternalStorageDirectory(), "photo.jpg");
-    		inPreview=true;
-    		
     		try {
       	        FileOutputStream fos = new FileOutputStream(photo.getPath());
       	
@@ -88,121 +115,154 @@ public class CameraFragment extends Fragment {
       	  	} catch (java.io.IOException e) {
       	        Log.e(TAG, e.getMessage());
       	    }
-            
-    		inPreview=true;
-            ((DeviceActionListener) getActivity()).takePhoto(photo.toURI());
+            ((DeviceActionListener) getActivity()).sendPhoto(photo.toURI());
+            switchCamera();
+	        switchCamera();
         }
     };
     
-    public void onPause() {
-    	if (inPreview) {
-    		camera.stopPreview();
-	    }
-
-	    camera.release();
-	    camera = null;
-	    inPreview = false;
-
-	    super.onPause();
-    }
-    
-    private Camera.Size getBestPreviewSize(int width, int height, Camera.Parameters parameters) {
-		Camera.Size result=null;
+    Camera.ShutterCallback shutterCallback = new Camera.ShutterCallback() {
 		
-		for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
-			if (size.width <= width && size.height <= height) {
-				if (result == null) {
-					result=size;
-				}
-				else {
-					int resultArea=result.width * result.height;
-					int newArea=size.width * size.height;
-					
-					if (newArea > resultArea) {
-						result=size;
-					}
-				}
-			}
+		public void onShutter() {
+			// Plays sound
 		}
-		
-		return(result);
-	}
-    
-    SurfaceHolder.Callback surfaceCallback = new SurfaceHolder.Callback() {
-        public void surfaceCreated(SurfaceHolder holder) {
-            try {
-				camera.setPreviewDisplay(previewHolder);
-			} catch (IOException e) {
-				Log.e(TAG, e.getMessage());
-			}
-        }
+	};
 
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-			Camera.Parameters parameters = camera.getParameters();
-			Camera.Size size = getBestPreviewSize(width, height, parameters);
-			Camera.Size pictureSize = getSmallestPictureSize(parameters);
-			
-			if (inPreview) {
-				camera.stopPreview();
-			}
-			
-			Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+    private class Preview extends ViewGroup implements Callback {
+      	
+      	private SurfaceView surfaceView;
+  		private SurfaceHolder holder;
+  		private Camera camera;
+  		private Size previewSize;
+  		private List<Size> supportedPreviewSizes;
 
-	        if(display.getRotation() == Surface.ROTATION_0)
-	        {
-	            parameters.setPreviewSize(height, width);                           
-	            camera.setDisplayOrientation(90);
-	        }
+  		public Preview(Context context) {
+  			super(context);
+  			
+  			surfaceView = new SurfaceView(context);
+  			addView(surfaceView);
+  			
+  			holder = surfaceView.getHolder();
+  			holder.addCallback(this);
+  			holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+  		}
+  		
+  		public void setCamera(Camera camera) {
+  	    	this.camera = camera;
+  	    	if (camera != null) {
+  				supportedPreviewSizes = camera.getParameters().getSupportedPreviewSizes();
+  				requestLayout();
+  			}
+  	    }
+  		
+  		public void switchCamera(Camera camera) {
+  			setCamera(camera);
+  			try {
+  				camera.setPreviewDisplay(holder);
+  			} catch (IOException e) {
+  				Log.e(TAG, e.getMessage());
+  			}
+  			Parameters parameters = camera.getParameters();
+  			parameters.setPreviewSize(previewSize.width, previewSize.height);
+  			requestLayout();
+  			
+  			Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+  			camera.setParameters(parameters);
+  			camera.setDisplayOrientation((display.getOrientation() + 90) % 360);
+  		}
+  		
+  		protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+  	        final int width = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
+  	        final int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
+  	        setMeasuredDimension(width, height);
 
-	        if(display.getRotation() == Surface.ROTATION_90)
-	        {
-	            parameters.setPreviewSize(width, height);                           
-	        }
+  	        if (supportedPreviewSizes != null) {
+  	            previewSize = getOptimalPreviewSize(supportedPreviewSizes, width, height);
+  	        }
+  	    }
 
-	        if(display.getRotation() == Surface.ROTATION_180)
-	        {
-	            parameters.setPreviewSize(height, width);               
-	        }
+  		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+  			Camera.Parameters parameters = camera.getParameters();
+  	        parameters.setPreviewSize(previewSize.width, previewSize.height);
+  	        requestLayout();
+  	        
+  	        Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 
-	        if(display.getRotation() == Surface.ROTATION_270)
-	        {
-	            parameters.setPreviewSize(width, height);
-	            camera.setDisplayOrientation(180);
-	        }
-			
-			if (size != null && pictureSize != null) {
-			  parameters.setPreviewSize(size.width, size.height);
-			  parameters.setPictureSize(pictureSize.width, pictureSize.height);
-			  parameters.setPictureFormat(ImageFormat.JPEG);
-			
-			  camera.setParameters(parameters);
-			  camera.startPreview();
-			  inPreview = true;
-			}
-        }
+  	        camera.setParameters(parameters);
+  	        camera.setDisplayOrientation((display.getOrientation() + 90) % 360);
+  	        camera.startPreview();
+  		}
 
-        public void surfaceDestroyed(SurfaceHolder holder) {
-          // no-op
-        }
-      };
-      
-      private Camera.Size getSmallestPictureSize(Camera.Parameters parameters) {
-    	  Camera.Size result = null;
+  		public void surfaceCreated(SurfaceHolder holder) {
+  			try {
+  	            if (camera != null) {
+  	                camera.setPreviewDisplay(holder);
+  	            }
+  	        } catch (IOException e) {
+  	            Log.e(TAG, e.getMessage());
+  	        }
+  		}
 
-		  for (Camera.Size size : parameters.getSupportedPictureSizes()) {
-			  if (result == null) {
-			    result = size;
-			  }
-			  else {
-				  int resultArea = result.width * result.height;
-				  int newArea = size.width * size.height;
-				
-			      if (newArea < resultArea) {
-			    	  result = size;
-			      }
-			  }
-		  }
+  		public void surfaceDestroyed(SurfaceHolder holder) {
+  			if (camera != null) {
+  	            camera.stopPreview();
+  	        }
+  		}
 
-		  return(result);
+  		protected void onLayout(boolean changed, int l, int t, int r, int b) {
+  			if (changed && getChildCount() > 0) {
+  	            final View child = getChildAt(0);
+
+  	            final int width = r - l;
+  	            final int height = b - t;
+
+  	            int previewWidth = width;
+  	            int previewHeight = height;
+  	            if (previewSize != null) {
+  	                previewWidth = previewSize.width;
+  	                previewHeight = previewSize.height;
+  	            }
+
+  	            if (width * previewHeight > height * previewWidth) {
+  	                final int scaledChildWidth = previewWidth * height / previewHeight;
+  	                child.layout((width - scaledChildWidth) / 2, 0, (width + scaledChildWidth) / 2, height);
+  	            } else {
+  	                final int scaledChildHeight = previewHeight * width / previewWidth;
+  	                child.layout(0, (height - scaledChildHeight) / 2, width, (height + scaledChildHeight) / 2);
+  	            }
+  	        }
+  		}
+  		
+  		private Size getOptimalPreviewSize(List<Size> sizes, int width, int height) {
+  	        final double ASPECT_TOLERANCE = 0.1;
+  	        double targetRatio = (double) width / height;
+  	        if (sizes == null) return null;
+
+  	        Size optimalSize = null;
+  	        double minDiff = Double.MAX_VALUE;
+
+  	        int targetHeight = height;
+
+  	        for (Size size : sizes) {
+  	            double ratio = (double) size.width / size.height;
+  	            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
+  	            if (Math.abs(size.height - targetHeight) < minDiff) {
+  	                optimalSize = size;
+  	                minDiff = Math.abs(size.height - targetHeight);
+  	            }
+  	        }
+
+  	        if (optimalSize == null) {
+  	            minDiff = Double.MAX_VALUE;
+  	            for (Size size : sizes) {
+  	                if (Math.abs(size.height - targetHeight) < minDiff) {
+  	                    optimalSize = size;
+  	                    minDiff = Math.abs(size.height - targetHeight);
+  	                }
+  	            }
+  	        }
+  	        return optimalSize;
+  	    }
+      	
       }
 }

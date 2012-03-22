@@ -5,7 +5,7 @@
     <string name="discover_peers_button">Discover</string>
     <string name="connect_peer_button">Connect</string>
     <string name="disconnect_peer_button">Disconnect</string>
-    <string name="get_file_button">Camera</string>
+    <string name="get_file_button">Open Camera</string>
     <string name="group_info_button">Group Info</string>
     <string name="back_button">Back</string>
     <string name="empty"></string>
@@ -20,4 +20,6 @@
     <string name="label_peers">Peers</string>
     <string name="app_description">An application for Wi-Fi Direct connectivity</string>
     <string name="group_owner_switch">Group Owner</string>
+    <string name="switch_camera_switch">View</string>
+    <string name="take_picture_btn">Take Photo</string>
 </resources>

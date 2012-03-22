@@ -10,42 +10,80 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/btn_connect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/connect_peer_button" />
-            <Button
-                android:id="@+id/btn_disconnect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/disconnect_peer_button"
-                android:visibility="gone" />
-            <Button
-                android:id="@+id/btn_start_client"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/get_file_button"
-                android:visibility="gone" />
-            <Button 
-                android:id="@+id/btn_group_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/group_info_button"
-                android:visibility="gone" />
-            <Button 
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/back_button"
-                android:visibility="gone" />
-        </LinearLayout>
+        android:layout_height="wrap_content">
+            
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                    <Button
+		                android:id="@+id/btn_connect"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="@string/connect_peer_button" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                    <Button
+		                android:id="@+id/btn_disconnect"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="@string/disconnect_peer_button"
+		                android:visibility="gone" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                    <Button
+		                android:id="@+id/btn_start_client"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="@string/get_file_button"
+		                android:visibility="gone" />
+                    <Switch
+                        android:id="@+id/swich_camera_switch"
+                        android:layout_marginLeft="20dp"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/switch_camera_switch"
+                        android:textOff="Back"
+                        android:textOn="Front" />
+
+                </TableRow>
+                <TableRow 
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                    <Button 
+                        android:id="@+id/btn_take_picture"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="@string/take_picture_btn"
+		                android:visibility="gone" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                    <Button 
+		                android:id="@+id/btn_group_info"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="@string/group_info_button"
+		                android:visibility="gone" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+                    <Button 
+		                android:id="@+id/btn_back"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="@string/back_button"
+		                android:visibility="gone" />
+                </TableRow>
+			</TableLayout>
         <LinearLayout
             android:orientation="vertical"
             android:id="@+id/detail_view"

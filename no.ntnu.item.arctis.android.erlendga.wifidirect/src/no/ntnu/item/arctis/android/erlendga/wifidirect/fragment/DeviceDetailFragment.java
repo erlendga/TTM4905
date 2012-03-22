@@ -2,7 +2,6 @@ package no.ntnu.item.arctis.android.erlendga.wifidirect.fragment;
 
 import no.ntnu.item.arctis.android.R;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.listener.DeviceActionListener;
-import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectapplication.WiFiDirectApplication;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -13,7 +12,6 @@ import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;

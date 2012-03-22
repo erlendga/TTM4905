@@ -49,6 +49,9 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,9 +77,13 @@ public class WiFiDirectApplication extends Block {
 	private String senderIP;
 	private String message;
 	public static final String MESSAGE_SUFFIX = "</v:Envelope>";
-	private static final int START_CAMERA = 0;
-	private static final int TAKE_PHOTO_CODE = 20;
+	private static final int INITIAL = 0;
+	private static final int START_CAMERA = 1;
+	private static final int SWITCH_CAMERA = 2;
+	private static final int TAKE_PHOTO = 3;
 	private Switch groupOwnerSwitch;
+	private boolean clientIpReceived = false;
+	private boolean cameraOn = false;
 	
 	public void initialize() {
 		manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
@@ -116,6 +123,14 @@ public class WiFiDirectApplication extends Block {
 				});
 			}
 		});
+		
+		activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.GONE);
+			}
+		});
+		
 		activity.setParentID(blockID);
 	}
 
@@ -346,19 +361,52 @@ public class WiFiDirectApplication extends Block {
 	
 			        if (connectionInfo.groupFormed) {
 			        	Resources resources = getDeviceDetailFragment().getResources();
+			        	final CompoundButton cameraSwitch = (CompoundButton) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.swich_camera_switch);
+			        	cameraSwitch.setVisibility(View.GONE);
 			        
 			        	if (connectionInfo.isGroupOwner) {
 			        		((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.status_text)).setText(resources.getString(R.string.server_text));
-				        }
-				        else {
-				            ((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.status_text)).setText(resources.getString(R.string.client_text));
-				               
-				            getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_start_client).setOnClickListener(new OnClickListener() {
-								
-								public void onClick(View v) {
-									sendToBlock("GROUP_CLIENT", START_CAMERA);
+			        		
+			        		final Button cameraBtn = (Button) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_start_client);
+			        		
+			        		final Button takePhotoBtn = (Button) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_take_picture);
+			        				        		
+			        		cameraBtn.setOnClickListener(new OnClickListener() {
+			        			
+								public void onClick(View v) {									
+									if (!cameraOn) {
+										cameraOn = true;
+										cameraBtn.setText("Close Camera");
+										takePhotoBtn.setVisibility(View.VISIBLE);
+										cameraSwitch.setVisibility(View.VISIBLE);
+									}
+									else {
+										cameraOn = false;
+										cameraBtn.setText("Open Camera");
+										takePhotoBtn.setVisibility(View.GONE);
+										cameraSwitch.setVisibility(View.GONE);
+									}
+									sendToBlock("SEND_MESSAGE", START_CAMERA);
 								}
 							});
+							
+							takePhotoBtn.setOnClickListener(new OnClickListener() {
+								
+								public void onClick(View v) {
+									sendToBlock("SEND_MESSAGE", TAKE_PHOTO);
+								}
+							});
+	
+			        		cameraSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {	
+
+								public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+									sendToBlock("SEND_MESSAGE", SWITCH_CAMERA);
+								}
+							});
+				        }
+				        else {
+				        	((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.status_text)).setText(resources.getString(R.string.client_text));
+				            sendToBlock("SEND_MESSAGE", INITIAL);
 				        }
 					}
 				}
@@ -406,6 +454,8 @@ public class WiFiDirectApplication extends Block {
 				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_back).setVisibility(View.VISIBLE);
 				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_disconnect).setVisibility(View.GONE);
 				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_group_info).setVisibility(View.GONE);
+				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_take_picture).setVisibility(View.GONE);
+				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.swich_camera_switch).setVisibility(View.GONE);
 				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_start_client).setVisibility(View.GONE);
 				
 				((TextView)getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.interface_name)).setText("Interface Name: " + groupInfo.getInterface());
@@ -437,9 +487,10 @@ public class WiFiDirectApplication extends Block {
 					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_group_info).setVisibility(View.VISIBLE);
 	
 					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.group_details).setVisibility(View.GONE);
+					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.swich_camera_switch).setVisibility(View.GONE);
 					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_connect).setVisibility(View.GONE);
 			        getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_back).setVisibility(View.GONE);
-			        if (!connectionInfo.isGroupOwner) {
+			        if (connectionInfo.isGroupOwner && clientIpReceived) {
 						getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
 					}
 				}	
@@ -455,15 +506,21 @@ public class WiFiDirectApplication extends Block {
 		return new File(path, "image.tmp");
 	}
 
-	//TODO: Fjerne intent
-	public void startCamera(Intent intent) {	
+	public void startCamera(final boolean cameraOn) {	
 	
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-				getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.VISIBLE);
-				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.frag_detail).setVisibility(View.GONE);
-				getCameraFragment().takePicture();
+				if (cameraOn) {
+					getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.VISIBLE);
+					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.frag_detail).setVisibility(View.GONE);
+				}
+				else {
+					getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.GONE);
+					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.frag_detail).setVisibility(View.VISIBLE);
+				}
+				
+//				getCameraFragment().takePicture();
 			}
 		});
 	}
@@ -474,22 +531,30 @@ public class WiFiDirectApplication extends Block {
 
 	public Message serialize(int prefix) {
 		Message message = new Message();
+		message.receiverPort = port;
 		Gson gson = new Gson();
+		
 		String json = null;
+		
 		switch (prefix) {
-		case START_CAMERA:
-			
-			message.receiverIP = connectionInfo.groupOwnerAddress.getHostAddress();
-			message.receiverPort = port;
-
-			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			
-			json = Integer.toString(START_CAMERA) + gson.toJson(intent);
-			
-			message.message = json;
-			
-			break;
+			case INITIAL:
+				message.receiverIP = connectionInfo.groupOwnerAddress.getHostAddress();		
+				json = Integer.toString(INITIAL);
+				break;
+			case START_CAMERA:
+				message.receiverIP = senderIP;				
+				json = Integer.toString(START_CAMERA) + gson.toJson(cameraOn);
+				break;
+			case SWITCH_CAMERA:
+				message.receiverIP = senderIP;
+				json = Integer.toString(SWITCH_CAMERA);// + gson.toJson(cameraSwitchChecked);
+				break;
+			case TAKE_PHOTO:
+				message.receiverIP = senderIP;
+				json = Integer.toString(TAKE_PHOTO);
+				break;
 		}
+		message.message = json;
 		return message;
 	}
 
@@ -503,11 +568,29 @@ public class WiFiDirectApplication extends Block {
 
 	public void deserialize() {
 		Gson gson = new Gson();
-		if (message.startsWith(Integer.toString(START_CAMERA))) {
-			message = message.substring(Integer.toString(START_CAMERA).length(), message.length());
+		if (message.startsWith(Integer.toString(INITIAL))) {
+			clientIpReceived = true;
 			
-			Intent intent = gson.fromJson(message, Intent.class);
-			sendToBlock("START_CAMERA", intent);
+			activity.runOnUiThread(new Runnable() {
+				
+				public void run() {
+					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
+				}
+			});
+			
+		}
+		else if (message.startsWith(Integer.toString(START_CAMERA))) {
+			if (!message.contentEquals(Integer.toString(START_CAMERA))) {
+				message = message.substring(Integer.toString(START_CAMERA).length(), message.length());
+				boolean cameraOn = gson.fromJson(message, boolean.class);
+				sendToBlock("START_CAMERA", cameraOn);
+			}
+		}
+		else if (message.startsWith(Integer.toString(SWITCH_CAMERA))) {
+			sendToBlock("SWITCH_CAMERA");
+		}
+		else if (message.startsWith(Integer.toString(TAKE_PHOTO))) {
+			sendToBlock("TAKE_PHOTO");
 		}
 	}
 
@@ -525,5 +608,23 @@ public class WiFiDirectApplication extends Block {
 		receiveInfo.channel = channel;
 		receiveInfo.manager = manager;
 		return receiveInfo;
+	}
+
+	public void switchCamera() {
+		activity.runOnUiThread(new Runnable() {
+				
+				public void run() {
+					getCameraFragment().switchCamera();
+				}
+			});
+	}
+
+	public void takePhoto() {
+		activity.runOnUiThread(new Runnable() {
+
+			public void run() {
+				getCameraFragment().takePicture();
+			}
+		});
 	}
 }
