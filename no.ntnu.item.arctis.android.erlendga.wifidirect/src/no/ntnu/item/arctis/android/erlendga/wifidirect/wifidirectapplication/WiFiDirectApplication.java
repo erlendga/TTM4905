@@ -1,9 +1,6 @@
 package no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectapplication;
 
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +11,7 @@ import no.ntnu.item.arctis.android.erlendga.wifidirect.filetransferservice.FileT
 import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.CameraFragment;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceDetailFragment;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceListFragment;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.groupowner.GroupOwnerInfo;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectconnect.WifiDirectConnectInfo;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectreceive.WifiDirectReceiveInfo;
 import no.ntnu.item.arctis.examples.realtransmissions.Message;
@@ -25,10 +23,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.hardware.Camera;
-import android.hardware.Camera.AutoFocusCallback;
-import android.hardware.Camera.PictureCallback;
-import android.hardware.Camera.ShutterCallback;
 import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
@@ -39,19 +33,14 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,7 +61,7 @@ public class WiFiDirectApplication extends Block {
 	private WifiP2pDevice device;
 	private List<WifiP2pDevice> connectionList = new ArrayList<WifiP2pDevice>();
 	private List<WifiP2pInfo> connectionInfoList = new ArrayList<WifiP2pInfo>();
-	public no.ntnu.item.arctis.android.erlendga.wifidirect.groupowner.GroupOwnerInfo groupOwnerInfo;
+	public GroupOwnerInfo groupOwnerInfo;
 	public final int port = 8988;
 	private String senderIP;
 	private String message;
@@ -84,6 +73,28 @@ public class WiFiDirectApplication extends Block {
 	private Switch groupOwnerSwitch;
 	private boolean clientIpReceived = false;
 	private boolean cameraOn = false;
+	private DeviceListFragment deviceListFragment;
+	private DeviceDetailFragment deviceDetailFragment;
+	private CompoundButton cameraSwitch;
+	private Resources deviceDetailFragmentResources;
+	private TextView deviceDetailTextView;
+	private Button cameraButton;
+	private Button takePhotoButton;
+	private LinearLayout groupDetails;
+	private LinearLayout detailView;
+	private Button backButton;
+	private Button disconnectButton;
+	private Button groupInfoButton;
+	private TextView interfaceNameTextView;
+	private TextView networkNameTextView;
+	private TextView goIpAddressTextView;
+	private TextView isGoTextView;
+	private TextView clientsTextView;
+	private CameraFragment cameraFragment;
+	private View cameraView;
+	private TextView passfraseTextView;
+	private View deviceDetailView;
+	private Button connectButton;
 	
 	public void initialize() {
 		manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
@@ -92,6 +103,36 @@ public class WiFiDirectApplication extends Block {
 
 			public void run() {
 				groupOwnerSwitch = (Switch) activity.findViewById(R.id.group_owner_switch);
+				deviceListFragment = (DeviceListFragment) activity.getFragmentManager().findFragmentById(R.id.frag_list);
+				deviceDetailFragment = (DeviceDetailFragment) activity.getFragmentManager().findFragmentById(R.id.frag_detail);
+				cameraFragment = (CameraFragment) activity.getFragmentManager().findFragmentById(R.id.camera);
+				
+				//TODO: From CompundButton to Switch?
+				cameraSwitch = (CompoundButton) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.swich_camera_switch);
+				
+				deviceDetailFragmentResources = deviceDetailFragment.getResources();
+				deviceDetailTextView = ((TextView) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.status_text));
+				cameraButton = (Button) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.btn_start_client);
+				takePhotoButton = (Button) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.btn_take_picture);
+				groupDetails = (LinearLayout) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.group_details);
+				//TODO: Maybe remove from here and XML
+				detailView = (LinearLayout) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.detail_view);
+				
+				backButton = (Button) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.btn_back);
+				disconnectButton = (Button) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.btn_disconnect);
+				groupInfoButton = (Button) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.btn_group_info);
+				connectButton = (Button) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.btn_connect);
+				
+				interfaceNameTextView = (TextView) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.interface_name);
+				networkNameTextView = (TextView) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.network_name);
+				goIpAddressTextView = (TextView) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.go_ip_address);
+				isGoTextView = (TextView) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.is_go);
+				clientsTextView = (TextView) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.clients);
+				passfraseTextView = (TextView) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.passfrase);
+				
+				deviceDetailView = (View) deviceDetailFragment.getDeviceDetailView().findViewById(R.id.frag_detail);
+				cameraView = (View) cameraFragment.getCameraView().findViewById(R.id.camera);
+				cameraView.setVisibility(View.GONE);
 			}
 		});
 		
@@ -124,30 +165,17 @@ public class WiFiDirectApplication extends Block {
 			}
 		});
 		
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.GONE);
-			}
-		});
-		
 		activity.setParentID(blockID);
 	}
 
 	private void resetData() {
-		if (getDeviceListFragment() != null) {
-			getDeviceListFragment().clearPeers();
+		if (deviceListFragment != null) {
+			deviceListFragment.clearPeers();
 		}
-		if (getDeviceDetailFragment() != null) {
-			getDeviceDetailFragment().resetViews();
+		if (deviceDetailFragment != null) {
+			deviceDetailFragment.resetViews();
 		}
 	}
-	
-	private DeviceListFragment getDeviceListFragment() {
-		return (DeviceListFragment) activity.getFragmentManager().findFragmentById(R.id.frag_list);
-	}
-	
-	
 
 	/** Receives available P2P devices and sets up a WPS with each device if this is not previously been done. //TODO TEST UPDATES AV UI
 	 * 
@@ -159,24 +187,28 @@ public class WiFiDirectApplication extends Block {
 				WifiP2pConfig config = new WifiP2pConfig();
 				config.deviceAddress = device.deviceAddress;
 	            config.wps.setup = WpsInfo.PBC;
+	            
 	            if (groupOwnerSwitch.isChecked()) {
 	            	config.groupOwnerIntent = 15;
 				}
 				else config.groupOwnerIntent = 0;
+				
 				connectionList.add(device);
+				
 		        sendToBlock("CONNECT", config);
 			}
 		}
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-				List<WifiP2pDevice> peers = getDeviceListFragment().getPeers();
+				List<WifiP2pDevice> peers = deviceListFragment.getPeers();
 				peers.clear();
 				peers.addAll(peerList.getDeviceList());
-				getDeviceListFragment().notifyDataSetChanged();
 				
+				deviceListFragment.notifyDataSetChanged();
+
 				if (peers.size() == 0) {
-		            getDeviceDetailFragment().resetViews();
+		            deviceDetailFragment.resetViews();
 		        } 
 			}
 		});
@@ -188,17 +220,11 @@ public class WiFiDirectApplication extends Block {
 			
 			public void run() {
 				if (!wifiP2pStateEnabled) {
-					getDeviceListFragment().resetThisDevice();
+					deviceListFragment.resetThisDevice();
 				}
-				else getDeviceListFragment().updateThisDevice(device);
+				else deviceListFragment.updateThisDevice(device);
 			}
 		});
-	}
-	
-	
-    
-    private DeviceDetailFragment getDeviceDetailFragment() {
-		return (DeviceDetailFragment) activity.getFragmentManager().findFragmentById(R.id.frag_detail);
 	}
 	
 	private String getReason(int reasonCode) {
@@ -256,6 +282,7 @@ public class WiFiDirectApplication extends Block {
 			public void run() {
 				Builder builder = new Builder(activity);
 				builder.setMessage(message).setCancelable(false).setPositiveButton("OK", null);
+				
 				AlertDialog alertDialog = builder.create();
 				alertDialog.show();
 			}
@@ -286,7 +313,7 @@ public class WiFiDirectApplication extends Block {
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-				getDeviceDetailFragment().resetViews();
+				deviceDetailFragment.resetViews();
 				Toast.makeText(activity, "Connection aborted", Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -324,7 +351,7 @@ public class WiFiDirectApplication extends Block {
 	 * 
 	 */
 	public void connectSuccess() {
-		ProgressDialog progressDialog = getDeviceDetailFragment().getDeviceDetailProgressDialog();
+		ProgressDialog progressDialog = deviceDetailFragment.getDeviceDetailProgressDialog();
 		if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
@@ -343,9 +370,8 @@ public class WiFiDirectApplication extends Block {
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-//				createAlertDialog("Error! No Wi-Fi connectivity");
 				if (device.status != WifiP2pDevice.CONNECTED) {
-					getDeviceDetailFragment().resetViews();
+					deviceDetailFragment.resetViews();
 				}
 			}
 		});
@@ -355,63 +381,12 @@ public class WiFiDirectApplication extends Block {
         enableProgressBar(false);
         
         if (!connectionInfoList.contains(connectionInfo)) {
-			activity.runOnUiThread(new Runnable() {
-			
-				public void run() {
-	
-			        if (connectionInfo.groupFormed) {
-			        	Resources resources = getDeviceDetailFragment().getResources();
-			        	final CompoundButton cameraSwitch = (CompoundButton) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.swich_camera_switch);
-			        	cameraSwitch.setVisibility(View.GONE);
-			        
-			        	if (connectionInfo.isGroupOwner) {
-			        		((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.status_text)).setText(resources.getString(R.string.server_text));
-			        		
-			        		final Button cameraBtn = (Button) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_start_client);
-			        		
-			        		final Button takePhotoBtn = (Button) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_take_picture);
-			        				        		
-			        		cameraBtn.setOnClickListener(new OnClickListener() {
-			        			
-								public void onClick(View v) {									
-									if (!cameraOn) {
-										cameraOn = true;
-										cameraBtn.setText("Close Camera");
-										takePhotoBtn.setVisibility(View.VISIBLE);
-										cameraSwitch.setVisibility(View.VISIBLE);
-									}
-									else {
-										cameraOn = false;
-										cameraBtn.setText("Open Camera");
-										takePhotoBtn.setVisibility(View.GONE);
-										cameraSwitch.setVisibility(View.GONE);
-									}
-									sendToBlock("SEND_MESSAGE", START_CAMERA);
-								}
-							});
-							
-							takePhotoBtn.setOnClickListener(new OnClickListener() {
-								
-								public void onClick(View v) {
-									sendToBlock("SEND_MESSAGE", TAKE_PHOTO);
-								}
-							});
-	
-			        		cameraSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {	
-
-								public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-									sendToBlock("SEND_MESSAGE", SWITCH_CAMERA);
-								}
-							});
-				        }
-				        else {
-				        	((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.status_text)).setText(resources.getString(R.string.client_text));
-				            sendToBlock("SEND_MESSAGE", INITIAL);
-				        }
-					}
-				}
-			});
-		connectionInfoList.add(connectionInfo);
+        	if (connectionInfo.groupFormed) {   
+	        	if (connectionInfo.isGroupOwner)
+	        		sendToBlock("GROUP_OWNER");
+		        else sendToBlock("GROUP_CLIENT");
+			}
+        	connectionInfoList.add(connectionInfo);
 		}
 	}
 	
@@ -420,13 +395,6 @@ public class WiFiDirectApplication extends Block {
 	}
 	
 	public FileTransferServiceInfo transfer(URI uri) {
-//		activity.runOnUiThread(new Runnable() {
-//		
-//			public void run() {
-//				getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.GONE);
-//			}
-//		});
-		
 		FileTransferServiceInfo info = new FileTransferServiceInfo();
 		info.URIFilePath = uri.toString();
 		info.receiverIP = senderIP;
@@ -434,12 +402,11 @@ public class WiFiDirectApplication extends Block {
 	}
 
 	public void removeGroupSuccess() {
-		Log.d(TAG, "Disconnect success");
-		
+		Log.d(TAG, "Disconnect success");	
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-				getDeviceDetailFragment().resetViews();
+				deviceDetailFragment.resetViews();
 			}
 		});
 	}
@@ -448,85 +415,81 @@ public class WiFiDirectApplication extends Block {
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.group_details).setVisibility(View.VISIBLE);
-				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.detail_view).setVisibility(View.GONE);
+				groupDetails.setVisibility(View.VISIBLE);
 				
-				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_back).setVisibility(View.VISIBLE);
-				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_disconnect).setVisibility(View.GONE);
-				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_group_info).setVisibility(View.GONE);
-				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_take_picture).setVisibility(View.GONE);
-				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.swich_camera_switch).setVisibility(View.GONE);
-				getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_start_client).setVisibility(View.GONE);
+				detailView.setVisibility(View.GONE);
 				
-				((TextView)getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.interface_name)).setText("Interface Name: " + groupInfo.getInterface());
-				((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.network_name)).setText("SSID: " + groupInfo.getNetworkName());
-				((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.go_ip_address)).setText("Group Owner IP Address: " + connectionInfo.groupOwnerAddress.getHostAddress());
-				((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.is_go))
-					.setText("Is Group Owner: " 
-							+ ((groupInfo.isGroupOwner() == true) ? getDeviceDetailFragment().getResources().getString(R.string.yes) : getDeviceDetailFragment().getResources().getString(R.string.no)));
+				backButton.setVisibility(View.VISIBLE);
+				disconnectButton.setVisibility(View.GONE);
+				groupInfoButton.setVisibility(View.GONE);
+				takePhotoButton.setVisibility(View.GONE);
+				cameraButton.setVisibility(View.GONE);
+				
+				cameraSwitch.setVisibility(View.GONE);
+				
+				interfaceNameTextView.setText("Interface Name: " + groupInfo.getInterface());
+				networkNameTextView.setText("SSID: " + groupInfo.getNetworkName());
+				goIpAddressTextView.setText("Group Owner IP Address: " + connectionInfo.groupOwnerAddress.getHostAddress());
+				isGoTextView.setText("Is Group Owner: " + ((groupInfo.isGroupOwner() == true) ? deviceDetailFragmentResources.getString(R.string.yes) : deviceDetailFragmentResources.getString(R.string.no)));
+				
 				if (connectionInfo.isGroupOwner) {
 					if (senderIP != null) {
-						((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.clients)).setText("Client IP Address: " + senderIP);
+						clientsTextView.setText("Client IP Address: " + senderIP);
 					}
-					((TextView) getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.passfrase)).setText("Passfrase: " + groupInfo.getPassphrase());
+					passfraseTextView.setText("Passfrase: " + groupInfo.getPassphrase());
 				}
 			}
 		});
 	}
 
-	public void showConnectionInfo() {
+	public void showDeviceDetailFragment() {
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
 				if (connectionInfo.groupFormed) {
-					getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.GONE);
-					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.frag_detail).setVisibility(View.VISIBLE);
-				
-					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.detail_view).setVisibility(View.VISIBLE);
-					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_disconnect).setVisibility(View.VISIBLE);
-					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_group_info).setVisibility(View.VISIBLE);
-	
-					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.group_details).setVisibility(View.GONE);
-					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.swich_camera_switch).setVisibility(View.GONE);
-					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_connect).setVisibility(View.GONE);
-			        getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_back).setVisibility(View.GONE);
-			        if (connectionInfo.isGroupOwner && clientIpReceived) {
-						getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
+					cameraView.setVisibility(View.GONE);
+					deviceDetailView.setVisibility(View.VISIBLE);
+					detailView.setVisibility(View.VISIBLE);
+					
+					groupDetails.setVisibility(View.GONE);
+					
+					disconnectButton.setVisibility(View.VISIBLE);
+					groupInfoButton.setVisibility(View.VISIBLE);
+					connectButton.setVisibility(View.GONE);
+					backButton.setVisibility(View.GONE);
+
+					if (cameraOn) {
+						takePhotoButton.setVisibility(View.VISIBLE);
+						cameraSwitch.setVisibility(View.VISIBLE);
 					}
+					else {
+						cameraSwitch.setVisibility(View.GONE);
+					}
+
+			        if (connectionInfo.isGroupOwner && clientIpReceived) {
+			        	cameraButton.setVisibility(View.VISIBLE);
+					}
+					
+					
 				}	
 			}
 		});
 	}
 
-	private File getTempFile() {
-		final File path = new File(Environment.getExternalStorageDirectory(), activity.getPackageName());
-		if (!path.exists()) {
-			path.mkdir();
-		}
-		return new File(path, "image.tmp");
-	}
-
 	public void startCamera(final boolean cameraOn) {	
-	
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
 				if (cameraOn) {
-					getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.VISIBLE);
-					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.frag_detail).setVisibility(View.GONE);
+					cameraView.setVisibility(View.VISIBLE);
+					deviceDetailView.setVisibility(View.GONE);
 				}
 				else {
-					getCameraFragment().getCameraView().findViewById(R.id.camera).setVisibility(View.GONE);
-					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.frag_detail).setVisibility(View.VISIBLE);
+					cameraView.setVisibility(View.GONE);
+					deviceDetailView.setVisibility(View.VISIBLE);
 				}
-				
-//				getCameraFragment().takePicture();
 			}
 		});
-	}
-	
-	private CameraFragment getCameraFragment() {
-		return (CameraFragment) activity.getFragmentManager().findFragmentById(R.id.camera);
 	}
 
 	public Message serialize(int prefix) {
@@ -574,7 +537,7 @@ public class WiFiDirectApplication extends Block {
 			activity.runOnUiThread(new Runnable() {
 				
 				public void run() {
-					getDeviceDetailFragment().getDeviceDetailView().findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
+					cameraButton.setVisibility(View.VISIBLE);
 				}
 			});
 			
@@ -612,9 +575,9 @@ public class WiFiDirectApplication extends Block {
 
 	public void switchCamera() {
 		activity.runOnUiThread(new Runnable() {
-				
+		
 				public void run() {
-					getCameraFragment().switchCamera();
+					cameraFragment.switchCamera();
 				}
 			});
 	}
@@ -623,7 +586,60 @@ public class WiFiDirectApplication extends Block {
 		activity.runOnUiThread(new Runnable() {
 
 			public void run() {
-				getCameraFragment().takePicture();
+				cameraFragment.takePicture();
+			}
+		});
+	}
+
+	public void groupOwner() {
+		activity.runOnUiThread(new Runnable() {
+
+			public void run() {
+				deviceDetailTextView.setText(deviceDetailFragmentResources.getString(R.string.server_text));
+			        				        		
+				cameraButton.setOnClickListener(new OnClickListener() {
+					
+					public void onClick(View v) {									
+						if (!cameraOn) {
+							cameraOn = true;
+							cameraButton.setText("Close Camera");
+							takePhotoButton.setVisibility(View.VISIBLE);
+							cameraSwitch.setVisibility(View.VISIBLE);
+						}
+						else {
+							cameraOn = false;
+							cameraButton.setText("Open Camera");
+							takePhotoButton.setVisibility(View.GONE);
+							cameraSwitch.setVisibility(View.GONE);
+						}
+						
+						sendToBlock("SEND_MESSAGE", START_CAMERA);
+					}
+				});
+				
+				takePhotoButton.setOnClickListener(new OnClickListener() {
+					
+					public void onClick(View v) {
+						sendToBlock("SEND_MESSAGE", TAKE_PHOTO);
+					}
+				});
+		
+				cameraSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {	
+		
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						sendToBlock("SEND_MESSAGE", SWITCH_CAMERA);
+					}
+				});
+			}
+		});
+	}
+
+	public void groupClient() {
+		activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				deviceDetailTextView.setText(deviceDetailFragmentResources.getString(R.string.client_text));
+	            sendToBlock("SEND_MESSAGE", INITIAL);
 			}
 		});
 	}
