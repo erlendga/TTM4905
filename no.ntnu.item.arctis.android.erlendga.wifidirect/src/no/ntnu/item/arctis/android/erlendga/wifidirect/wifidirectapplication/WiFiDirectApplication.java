@@ -372,6 +372,9 @@ public class WiFiDirectApplication extends Block {
 			public void run() {
 				if (device.status != WifiP2pDevice.CONNECTED) {
 					deviceDetailFragment.resetViews();
+					if (cameraOn) {
+						cameraView.setVisibility(View.GONE);
+					}
 				}
 			}
 		});
@@ -510,7 +513,7 @@ public class WiFiDirectApplication extends Block {
 				break;
 			case SWITCH_CAMERA:
 				message.receiverIP = senderIP;
-				json = Integer.toString(SWITCH_CAMERA);// + gson.toJson(cameraSwitchChecked);
+				json = Integer.toString(SWITCH_CAMERA);
 				break;
 			case TAKE_PHOTO:
 				message.receiverIP = senderIP;
@@ -523,14 +526,15 @@ public class WiFiDirectApplication extends Block {
 
 	public void extract(Message message) {
 		this.senderIP = message.senderIP;
-		if (message.message.contains(MESSAGE_SUFFIX)) {
+		if (message.message.contains(MESSAGE_SUFFIX))
 			this.message = message.message.substring(0, message.message.length() - MESSAGE_SUFFIX.length());
-		}
-		else this.message = message.message;
+		else 
+			this.message = message.message;
 	}
 
 	public void deserialize() {
 		Gson gson = new Gson();
+		
 		if (message.startsWith(Integer.toString(INITIAL))) {
 			clientIpReceived = true;
 			
@@ -539,8 +543,7 @@ public class WiFiDirectApplication extends Block {
 				public void run() {
 					cameraButton.setVisibility(View.VISIBLE);
 				}
-			});
-			
+			});	
 		}
 		else if (message.startsWith(Integer.toString(START_CAMERA))) {
 			if (!message.contentEquals(Integer.toString(START_CAMERA))) {
@@ -549,12 +552,10 @@ public class WiFiDirectApplication extends Block {
 				sendToBlock("START_CAMERA", cameraOn);
 			}
 		}
-		else if (message.startsWith(Integer.toString(SWITCH_CAMERA))) {
+		else if (message.startsWith(Integer.toString(SWITCH_CAMERA)))
 			sendToBlock("SWITCH_CAMERA");
-		}
-		else if (message.startsWith(Integer.toString(TAKE_PHOTO))) {
+		else if (message.startsWith(Integer.toString(TAKE_PHOTO)))
 			sendToBlock("TAKE_PHOTO");
-		}
 	}
 
 	public void viewImage(String result) {

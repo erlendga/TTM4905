@@ -8,10 +8,10 @@
           <subvertex xmi:type="uml:State" xmi:id="_9QosgHKPEeGhXoBnHKZ0YQ" name="active"/>
           <subvertex xmi:type="uml:FinalState" xmi:id="_DggIEHKQEeGhXoBnHKZ0YQ" name="&lt;final>"/>
           <transition xmi:id="_9QhXwHKPEeGhXoBnHKZ0YQ" name="start / " source="_pG93QnKJEeGhXoBnHKZ0YQ" target="_9QosgHKPEeGhXoBnHKZ0YQ"/>
-          <transition xmi:id="_-jgpoHKPEeGhXoBnHKZ0YQ" name=" / wifiP2pStateEnabled" source="_9QosgHKPEeGhXoBnHKZ0YQ" target="_9QosgHKPEeGhXoBnHKZ0YQ"/>
-          <transition xmi:id="__OQ20HKPEeGhXoBnHKZ0YQ" name=" / wifiP2pThisDeviceChanged" source="_9QosgHKPEeGhXoBnHKZ0YQ" target="_9QosgHKPEeGhXoBnHKZ0YQ"/>
-          <transition xmi:id="_ACr9YHKQEeGhXoBnHKZ0YQ" name=" / connectionInfoAvailable" source="_9QosgHKPEeGhXoBnHKZ0YQ" target="_9QosgHKPEeGhXoBnHKZ0YQ"/>
-          <transition xmi:id="_AwthAHKQEeGhXoBnHKZ0YQ" name=" / groupInfoAvailable" source="_9QosgHKPEeGhXoBnHKZ0YQ" target="_9QosgHKPEeGhXoBnHKZ0YQ"/>
+          <transition xmi:id="_-jgpoHKPEeGhXoBnHKZ0YQ" name=" / stateEnabled" source="_9QosgHKPEeGhXoBnHKZ0YQ" target="_9QosgHKPEeGhXoBnHKZ0YQ"/>
+          <transition xmi:id="__OQ20HKPEeGhXoBnHKZ0YQ" name=" / thisDeviceChanged" source="_9QosgHKPEeGhXoBnHKZ0YQ" target="_9QosgHKPEeGhXoBnHKZ0YQ"/>
+          <transition xmi:id="_ACr9YHKQEeGhXoBnHKZ0YQ" name=" / connectionInfo" source="_9QosgHKPEeGhXoBnHKZ0YQ" target="_9QosgHKPEeGhXoBnHKZ0YQ"/>
+          <transition xmi:id="_AwthAHKQEeGhXoBnHKZ0YQ" name=" / groupInfo" source="_9QosgHKPEeGhXoBnHKZ0YQ" target="_9QosgHKPEeGhXoBnHKZ0YQ"/>
           <transition xmi:id="_CC46kHKQEeGhXoBnHKZ0YQ" name=" / notConnected" source="_9QosgHKPEeGhXoBnHKZ0YQ" target="_9QosgHKPEeGhXoBnHKZ0YQ"/>
           <transition xmi:id="_C5FiwHKQEeGhXoBnHKZ0YQ" name="stop / " source="_9QosgHKPEeGhXoBnHKZ0YQ" target="_9QosgHKPEeGhXoBnHKZ0YQ"/>
           <transition xmi:id="_Dgb2oHKQEeGhXoBnHKZ0YQ" name=" / stopped" source="_9QosgHKPEeGhXoBnHKZ0YQ" target="_DggIEHKQEeGhXoBnHKZ0YQ"/>
@@ -26,10 +26,10 @@
       <ownedOperation xmi:id="_XVOhsHKOEeGhXoBnHKZ0YQ" name="onGroupInfoAvailable"/>
       <ownedOperation xmi:id="_wPS9IHKPEeGhXoBnHKZ0YQ" name="unregisterBroadcastReceiver"/>
       <ownedParameter xmi:id="_zMi4wHKMEeGhXoBnHKZ0YQ" name="start" type="_l9Yd4HKOEeGhXoBnHKZ0YQ"/>
-      <ownedParameter xmi:id="_6NogcHKNEeGhXoBnHKZ0YQ" name="wifiP2pStateEnabled" type="_XxAUMHKNEeGhXoBnHKZ0YQ" direction="out" isStream="true"/>
-      <ownedParameter xmi:id="_FKdaYHKOEeGhXoBnHKZ0YQ" name="wifiP2pThisDeviceChanged" type="_kDWPkHKNEeGhXoBnHKZ0YQ" direction="out" isStream="true"/>
-      <ownedParameter xmi:id="_Zg-yIHKPEeGhXoBnHKZ0YQ" name="connectionInfoAvailable" type="_u5iWAXKNEeGhXoBnHKZ0YQ" direction="out" isStream="true"/>
-      <ownedParameter xmi:id="_djeXMHKPEeGhXoBnHKZ0YQ" name="groupInfoAvailable" type="_u5c2cXKNEeGhXoBnHKZ0YQ" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_6NogcHKNEeGhXoBnHKZ0YQ" name="stateEnabled" type="_XxAUMHKNEeGhXoBnHKZ0YQ" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_FKdaYHKOEeGhXoBnHKZ0YQ" name="thisDeviceChanged" type="_kDWPkHKNEeGhXoBnHKZ0YQ" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_Zg-yIHKPEeGhXoBnHKZ0YQ" name="connectionInfo" type="_u5iWAXKNEeGhXoBnHKZ0YQ" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_djeXMHKPEeGhXoBnHKZ0YQ" name="groupInfo" type="_u5c2cXKNEeGhXoBnHKZ0YQ" direction="out" isStream="true"/>
       <ownedParameter xmi:id="_lVXmMHKPEeGhXoBnHKZ0YQ" name="notConnected" direction="out" isStream="true"/>
       <ownedParameter xmi:id="_r9eioHKPEeGhXoBnHKZ0YQ" name="stop" isStream="true"/>
       <ownedParameter xmi:id="_zxppkHKPEeGhXoBnHKZ0YQ" name="stopped" direction="out"/>
@@ -82,10 +82,10 @@
       <node xmi:type="uml:CallOperationAction" xmi:id="_u5mncHKNEeGhXoBnHKZ0YQ" name="o3" outgoing="_u5pDsHKNEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" operation="_u5mncXKNEeGhXoBnHKZ0YQ">
         <argument xmi:id="_u5n1kHKNEeGhXoBnHKZ0YQ" name="intent" incoming="_wFbhYHKNEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" type="_SVZAEXKNEeGhXoBnHKZ0YQ"/>
       </node>
-      <node xmi:type="uml:ActivityParameterNode" xmi:id="_6NnSUHKNEeGhXoBnHKZ0YQ" name="wifiP2pStateEnabled" incoming="_9W-3AHKNEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" type="_XxAUMHKNEeGhXoBnHKZ0YQ" parameter="_6NogcHKNEeGhXoBnHKZ0YQ"/>
-      <node xmi:type="uml:ActivityParameterNode" xmi:id="_FKcMQHKOEeGhXoBnHKZ0YQ" name="wifiP2pThisDeviceChanged" incoming="_Oqci4HKOEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" type="_kDWPkHKNEeGhXoBnHKZ0YQ" parameter="_FKdaYHKOEeGhXoBnHKZ0YQ"/>
-      <node xmi:type="uml:ActivityParameterNode" xmi:id="_Zg-LEHKPEeGhXoBnHKZ0YQ" name="connectionInfoAvailable" incoming="_a9qLgHKPEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" type="_u5iWAXKNEeGhXoBnHKZ0YQ" parameter="_Zg-yIHKPEeGhXoBnHKZ0YQ"/>
-      <node xmi:type="uml:ActivityParameterNode" xmi:id="_djdwIHKPEeGhXoBnHKZ0YQ" name="groupInfoAvailable" incoming="_fZKtgHKPEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" type="_u5c2cXKNEeGhXoBnHKZ0YQ" parameter="_djeXMHKPEeGhXoBnHKZ0YQ"/>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="_6NnSUHKNEeGhXoBnHKZ0YQ" name="stateEnabled" incoming="_9W-3AHKNEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" type="_XxAUMHKNEeGhXoBnHKZ0YQ" parameter="_6NogcHKNEeGhXoBnHKZ0YQ"/>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="_FKcMQHKOEeGhXoBnHKZ0YQ" name="thisDeviceChanged" incoming="_Oqci4HKOEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" type="_kDWPkHKNEeGhXoBnHKZ0YQ" parameter="_FKdaYHKOEeGhXoBnHKZ0YQ"/>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="_Zg-LEHKPEeGhXoBnHKZ0YQ" name="connectionInfo" incoming="_a9qLgHKPEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" type="_u5iWAXKNEeGhXoBnHKZ0YQ" parameter="_Zg-yIHKPEeGhXoBnHKZ0YQ"/>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="_djdwIHKPEeGhXoBnHKZ0YQ" name="groupInfo" incoming="_fZKtgHKPEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" type="_u5c2cXKNEeGhXoBnHKZ0YQ" parameter="_djeXMHKPEeGhXoBnHKZ0YQ"/>
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_lVWYEHKPEeGhXoBnHKZ0YQ" name="notConnected" incoming="_mqiCUHKPEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" parameter="_lVXmMHKPEeGhXoBnHKZ0YQ"/>
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_r9dUgHKPEeGhXoBnHKZ0YQ" name="stop" outgoing="_yejqAHKPEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" parameter="_r9eioHKPEeGhXoBnHKZ0YQ"/>
       <node xmi:type="uml:CallOperationAction" xmi:id="_wPRvAHKPEeGhXoBnHKZ0YQ" name="o4" outgoing="_1caiQHKPEeGhXoBnHKZ0YQ" incoming="_yejqAHKPEeGhXoBnHKZ0YQ" inPartition="_pG8pIXKJEeGhXoBnHKZ0YQ" operation="_wPS9IHKPEeGhXoBnHKZ0YQ"/>
