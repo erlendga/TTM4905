@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<block
+    name="Remote Camera Service" 
+    uuid="_F4EkEn1fEeGfUu2pVxlCEQ" 
+    status="under construction" 
+    type="block" 
+    >
+    <required>
+        <block name="c1" uuid="_AVEEImn7EeGTlN6UOxl_EA"/>
+        <block name="c0" uuid="_kG8m0ThEEeC7X8PMsGNNiA"/>
+    </required>
+</block>

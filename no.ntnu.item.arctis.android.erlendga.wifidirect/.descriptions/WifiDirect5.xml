@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<block
+    name="Wifi Direct 5" 
+    uuid="_BzQW8XyzEeGGysvE_Ik5ig" 
+    status="under construction" 
+    type="block" 
+    >
+    <required>
+        <block name="c1" uuid="_FT4QAVJsEeGECvBWYMJF7A"/>
+        <block name="c2" uuid="_Kk8_QlL0EeG4bte-bvbkCA"/>
+        <block name="c0" uuid="_pG8pIHKJEeGhXoBnHKZ0YQ"/>
+        <block name="c3" uuid="_g2lcAlL5EeG4bte-bvbkCA"/>
+    </required>
+</block>

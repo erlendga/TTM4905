@@ -1,4 +1,4 @@
-package no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectapplication;
+package no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectapplication3;
 
 
 import java.net.URI;
@@ -6,33 +6,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.ntnu.item.arctis.android.R;
-import no.ntnu.item.arctis.android.erlendga.wifidirect.discover.DiscoverInfo;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.filetransferservice.FileTransferServiceInfo;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.CameraFragment;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceDetailFragment;
 import no.ntnu.item.arctis.android.erlendga.wifidirect.fragment.DeviceListFragment;
-import no.ntnu.item.arctis.android.erlendga.wifidirect.groupowner.GroupOwnerInfo;
-import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectconnect.WifiDirectConnectInfo;
-import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectreceive.WifiDirectReceiveInfo;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirect1.WifiDirect1;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirect4.WifiDirect4;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirect4.WifiDirect4Update;
+import no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectapplication.WiFiDirectApplicationActivity;
 import no.ntnu.item.arctis.examples.realtransmissions.Message;
 import no.ntnu.item.arctis.runtime.Block;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -44,24 +40,18 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-public class WiFiDirectApplication extends Block {
+public class WiFiDirectApplication3 extends Block {
 
-	private Channel channel;
-	public WifiP2pManager manager;
 	public WifiP2pInfo connectionInfo;
 	public WifiP2pGroup groupInfo;
-	private WifiP2pDevice device;
+	private WifiP2pDevice thisDevice;
 	public Menu menu;
-	
-	public GroupOwnerInfo groupOwnerInfo;
 	
 	public WiFiDirectApplicationActivity activity;
 	
-	public boolean wifiP2pStateEnabled = false;
 	public boolean progressBarVisible = false;
 	private boolean clientIpReceived = false;
 	private boolean cameraOn = false;
@@ -71,15 +61,16 @@ public class WiFiDirectApplication extends Block {
 	private String senderIP;
 	private String message;
 	
-	private List<WifiP2pDevice> connectionList = new ArrayList<WifiP2pDevice>();
-	private List<WifiP2pInfo> connectionInfoList = new ArrayList<WifiP2pInfo>();
-	
 	public final int port = 8988;
 	private static final int INITIAL = 0;
 	private static final int START_CAMERA = 1;
 	private static final int SWITCH_CAMERA = 2;
 	private static final int TAKE_PHOTO = 3;
+	private static final int NOT_CONNECTED = 3;
+	private static final int WIFI_P2P_DISABLED = 4;
 	
+	private List<WifiP2pInfo> connectionInfoList = new ArrayList<WifiP2pInfo>();
+
 	private DeviceListFragment deviceListFragment;
 	private DeviceDetailFragment deviceDetailFragment;
 	private CameraFragment cameraFragment;
@@ -110,9 +101,10 @@ public class WiFiDirectApplication extends Block {
 	private Button groupInfoButton;
 	private Button connectButton;
 	
+	private ProgressDialog progressDialog;
+	public boolean disconnected = false;
+	
 	public void initialize() {
-		manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
-		
 		activity.runOnUiThread(new Runnable() {
 
 			public void run() {	
@@ -149,143 +141,12 @@ public class WiFiDirectApplication extends Block {
 				cameraView = (View) cameraFragment.getCameraView().findViewById(R.id.camera);
 				
 				cameraView.setVisibility(View.GONE);
-			}
-		});
-		
-		channel = manager.initialize(activity, activity.getMainLooper(), new ChannelListener() {
-			
-			public void onChannelDisconnected() {
-				Log.d(TAG, "Channel lost for the first time. Trying again.");
 				
-				activity.runOnUiThread(new Runnable() {
-					
-					public void run() {
-						Toast.makeText(activity, "Channel lost. Trying again", Toast.LENGTH_LONG).show();
-					}
-				});
-				
-				resetData();
-				
-				manager.initialize(activity, activity.getMainLooper(), new ChannelListener() {
-					
-					public void onChannelDisconnected() {
-						Log.d(TAG, "Channel is probably lost permanently.");
-						activity.runOnUiThread(new Runnable() {
-							
-							public void run() {
-								Toast.makeText(activity, "Severe! Channel is probably lost premanently. Try Disable/Re-Enable P2P.", Toast.LENGTH_LONG).show();
-							}
-						});
-					}
-				});
+				progressDialog = deviceDetailFragment.getDeviceDetailProgressDialog();
 			}
 		});
 		
 		activity.setParentID(blockID);
-	}
-
-	private void resetData() {
-		if (deviceListFragment != null) {
-			deviceListFragment.clearPeers();
-		}
-		if (deviceDetailFragment != null) {
-			deviceDetailFragment.resetViews();
-		}
-	}
-
-	/** Receives available P2P devices and sets up a WPS with each device if this is not previously been done. //TODO TEST UPDATES AV UI
-	 * 
-	 * @param peerList The list available P2P devices
-	 */
-	public void peersAvailable(final WifiP2pDeviceList peerList) {
-		for (WifiP2pDevice device : peerList.getDeviceList()) {
-			if (!connectionList.contains(device)) {
-				WifiP2pConfig config = new WifiP2pConfig();
-				config.deviceAddress = device.deviceAddress;
-	            config.wps.setup = WpsInfo.PBC;
-	            
-	            if (groupOwnerSwitch.isChecked()) {
-	            	config.groupOwnerIntent = 15;
-				}
-				else config.groupOwnerIntent = 0;
-				
-				connectionList.add(device);
-				
-		        sendToBlock("CONNECT", config);
-			}
-		}
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				List<WifiP2pDevice> peers = deviceListFragment.getPeers();
-				peers.clear();
-				peers.addAll(peerList.getDeviceList());
-				
-				deviceListFragment.notifyDataSetChanged();
-
-				if (peers.size() == 0) {
-		            deviceDetailFragment.resetViews();
-		        } 
-			}
-		});
-	}
-
-	public void updateThisDevice(final WifiP2pDevice device) {
-		this.device = device;
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				if (!wifiP2pStateEnabled) {
-					deviceListFragment.resetThisDevice();
-				}
-				else deviceListFragment.updateThisDevice(device);
-			}
-		});
-	}
-	
-	private String getReason(int reasonCode) {
-		String reason = null;
-		switch (reasonCode) {
-			case WifiP2pManager.ERROR:
-				reason = "Internal error";
-				break;
-			case WifiP2pManager.P2P_UNSUPPORTED:
-				reason = "P2P is unsupported on the device";
-				break;
-			case WifiP2pManager.BUSY:
-				reason = "The framework is busy and unable to service the request";
-				break;
-			default:
-				reason = "Unknown error";
-				break;
-		}
-		return reason;
-	}
-
-	// Do not edit this constructor.
-	public WiFiDirectApplication() {
-	}
-
-	public void startWirelessSettings() {
-		if (manager != null && channel != null) {
-					activity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-		}
-		else {
-			Log.e(TAG, "channel or manager is null");
-		}
-	}
-
-	public void p2pOffWarning() {
-		enableProgressBar(false);
-		createAlertDialog("Enable P2P from action bar button above or system settings");
-	}
-
-	public void discoveryFailed(final int reasonCode) {
-		createAlertDialog("Discover Peers Failed. Reason: " + getReason(reasonCode));
-	}
-
-	public void connectFailed(final int reasonCode) {
-		createAlertDialog("Connect failed. Reason: " + getReason(reasonCode));
 	}
 	
 	private void createAlertDialog(final String message) {
@@ -321,91 +182,26 @@ public class WiFiDirectApplication extends Block {
 		});
 	}
 
-	public void cancelConnectSuccess() {
+	public void resetDeviceDetailFragment() {
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
 				deviceDetailFragment.resetViews();
-				Toast.makeText(activity, "Connection aborted", Toast.LENGTH_SHORT).show();
+				deviceListFragment.resetThisDevice();
+				if (cameraOn)
+					cameraView.setVisibility(View.GONE);
 			}
 		});
-	}
-
-	public void cancelConnectFailed(final int reasonCode) {
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				Toast.makeText(activity, "Connect connect request failed. Reason: " + getReason(reasonCode), Toast.LENGTH_LONG).show();
-			}
-		});
-	}
-
-	public DiscoverInfo initDiscover() {
-		enableProgressBar(true);
-		
-		if (!connectionList.isEmpty()) {
-			connectionList.clear();
-		}
-		DiscoverInfo discoverInfo = new DiscoverInfo();
-		discoverInfo.channel = channel;
-		discoverInfo.wifiP2pStateEnabled = wifiP2pStateEnabled;
-		discoverInfo.manager = manager;
-		return discoverInfo;
-	}
-
-	public WifiDirectConnectInfo initWifiDirectConnect(WifiP2pConfig config) {
-		WifiDirectConnectInfo connectInfo = new WifiDirectConnectInfo();
-		connectInfo.channel = channel;
-		connectInfo.config = config;
-		connectInfo.manager = manager;
-		return connectInfo;
 	}
 	
 	/** The connection operation is successful. The progress dialog is dismissed and a cancel connect operation will not be able to be performed.
 	 * 
 	 */
-	public void connectSuccess() {
-		ProgressDialog progressDialog = deviceDetailFragment.getDeviceDetailProgressDialog();
+	public void dismissProgressDialog() {
 		if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-	}
-
-	public void removeGroupFailed(final int reasonCode) {
-		createAlertDialog("Disconnection failed. Reason: " + getReason(reasonCode));
-	}
-
-	/** The device notices that it has no Wi-Fi connection. This means that something went wrong.
-	 * 
-	 */
-	public void notConnected() {
-		Log.d(TAG, "Not connected");
-		enableProgressBar(false);
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				if (device.status != WifiP2pDevice.CONNECTED) {
-					deviceDetailFragment.resetViews();
-					if (cameraOn) {
-						cameraView.setVisibility(View.GONE);
-					}
-				}
-			}
-		});
-	}
-
-	public void updateConnectionInfo() {
         enableProgressBar(false);
-        
-        if (!connectionInfoList.contains(connectionInfo)) {
-        	if (connectionInfo.groupFormed) {   
-	        	if (connectionInfo.isGroupOwner)
-	        		sendToBlock("GROUP_OWNER");
-		        else 
-		        	sendToBlock("GROUP_CLIENT");
-			}
-        	connectionInfoList.add(connectionInfo);
-		}
 	}
 	
 	public Activity getActivity() {
@@ -417,16 +213,6 @@ public class WiFiDirectApplication extends Block {
 		info.URIFilePath = uri.toString();
 		info.receiverIP = senderIP;
 		return info;
-	}
-
-	public void removeGroupSuccess() {
-		Log.d(TAG, "Disconnect success");	
-		activity.runOnUiThread(new Runnable() {
-			
-			public void run() {
-				deviceDetailFragment.resetViews();
-			}
-		});
 	}
 
 	public void showGroupInfo() {
@@ -582,13 +368,6 @@ public class WiFiDirectApplication extends Block {
 		}
 	}
 
-	public WifiDirectReceiveInfo initWifiDirectReceive() {
-		WifiDirectReceiveInfo receiveInfo = new WifiDirectReceiveInfo();
-		receiveInfo.channel = channel;
-		receiveInfo.manager = manager;
-		return receiveInfo;
-	}
-
 	public void switchCamera() {
 		activity.runOnUiThread(new Runnable() {
 		
@@ -608,6 +387,8 @@ public class WiFiDirectApplication extends Block {
 	}
 
 	public void groupOwner() {
+		disconnected = false;
+		
 		activity.runOnUiThread(new Runnable() {
 
 			public void run() {
@@ -651,6 +432,8 @@ public class WiFiDirectApplication extends Block {
 	}
 
 	public void groupClient() {
+		disconnected = false;
+		
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
@@ -658,5 +441,120 @@ public class WiFiDirectApplication extends Block {
 	            sendToBlock("SEND_MESSAGE", INITIAL);
 			}
 		});
+	}
+
+	public WifiP2pConfig setWifiP2pConfig() {
+		enableProgressBar(true);
+	
+		WifiP2pConfig config = new WifiP2pConfig();
+		config.wps.setup = WpsInfo.PBC;
+		
+		if (groupOwnerSwitch.isChecked())
+			config.groupOwnerIntent = 15;
+		else config.groupOwnerIntent = 0;
+		
+		return config;
+	}
+
+	public void getFailure(int failureCode) {
+		switch (failureCode) {
+			case WifiDirect4.ERROR:
+				createAlertDialog("Internal error.");
+				break;
+			case WifiDirect4.P2P_UNSUPPORTED:
+				createAlertDialog("P2P is unsupported on the device.");
+				break;
+			case WifiDirect4.BUSY:
+				createAlertDialog("The framework is busy and unable to service the request.");
+				break;
+			case WifiDirect4.NOT_CONNECTED:
+				Log.d(TAG, "Not connected");
+				enableProgressBar(false);
+				activity.runOnUiThread(new Runnable() {
+					
+					public void run() {
+						if (thisDevice != null) {
+							if (thisDevice.status != WifiP2pDevice.CONNECTED) {
+								deviceDetailFragment.resetViews();
+								if (cameraOn)
+									cameraView.setVisibility(View.GONE);
+							}
+						}
+					}
+				});
+				break;
+			case WifiDirect4.WIFI_P2P_DISABLED:
+				enableProgressBar(false);
+				createAlertDialog("Enable P2P from action bar button above or system settings.");
+				break;
+			case WifiDirect4.CHANNEL_LOST_1:
+				createAlertDialog("Channel lost. Trying again");
+			
+				if (deviceListFragment != null)
+					deviceListFragment.clearPeers();
+					
+				if (deviceDetailFragment != null)
+					deviceDetailFragment.resetViews();
+				break;
+			case WifiDirect4.CHANNEL_LOST_2:
+				createAlertDialog("Severe! Channel is probably lost premanently. Try Disable/Re-Enable P2P.");
+				break;
+			default:
+				createAlertDialog("Unknown error.");
+				break;
+		}
+	}
+
+	public void startWirelessSettings() {
+//		if (manager != null && channel != null) {
+					activity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+//		}
+//		else {
+//			Log.e(TAG, "channel or manager is null");
+//		}
+	}
+
+	public void getUpdate(WifiDirect4Update update) {
+		if (update.connectionInfo != connectionInfo) {
+			connectionInfo = update.connectionInfo;
+			if (!connectionInfoList.contains(connectionInfo)) {
+	        	if (connectionInfo.groupFormed) {   
+		        	if (connectionInfo.isGroupOwner)
+		        		sendToBlock("GROUP_OWNER", connectionInfo);
+			        else 
+			        	sendToBlock("GROUP_CLIENT", connectionInfo);
+				}
+	        	connectionInfoList.add(connectionInfo);
+			}
+		}
+		
+		if (update.groupInfo != groupInfo) {
+			groupInfo = update.groupInfo;
+		}
+		
+		if (update.thisDevice != thisDevice) {
+			thisDevice = update.thisDevice;
+			activity.runOnUiThread(new Runnable() {
+			
+				public void run() {
+					//TODO: Test this!!!
+					
+					if (thisDevice.status == WifiP2pDevice.UNAVAILABLE) {
+						deviceListFragment.resetThisDevice();
+					}
+					else {
+						deviceListFragment.updateThisDevice(thisDevice);
+						if (cameraOn) {
+							cameraView.setVisibility(View.GONE);
+						}
+					}
+					deviceListFragment.updateThisDevice(thisDevice);
+				}
+			});
+		}
+	}
+
+	public void setDisconnectedTrue() {
+		disconnected = true;
 	}
 }

@@ -31,13 +31,13 @@ public class WiFiDirectApplicationActivity extends ArctisAndroidActivity impleme
 	public void onResume() {
 		super.onResume();
 		Log.d(TAG, "On Resume");
-		sendSignalToBuildingBlock("ON_RESUME");
+//		sendSignalToBuildingBlock("ON_RESUME");
 	}
 	
 	public void onPause() {
 		super.onPause();
 		Log.d(TAG, "On Pause");
-		sendSignalToBuildingBlock("ON_PAUSE");
+//		sendSignalToBuildingBlock("ON_PAUSE");
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {

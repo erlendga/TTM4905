@@ -98,10 +98,6 @@ public class FileTransferService extends Block {
 					public void onPostExecute(String result) {
 						sendToBlock("RECEIVED", result);
 					}
-
-					public void onCancelled() {
-						sendToBlock("CANCELLED");
-					}
 				}).execute();
 			}
 		});
@@ -147,20 +143,7 @@ public class FileTransferService extends Block {
         protected void onPostExecute(String result) {
         	listener.onPostExecute(result);
         }
-
-        protected void onPreExecute() {
-//            statusText.setText("Opening a server socket");
-        }
-        
-        protected void onCancelled() {
-        	listener.onCancelled();
-        }
-
     }
-
-	public void cancel() {
-		asyncTask.cancel(true);
-	}
 
 	// Do not edit this constructor.
 	public FileTransferService(int socketTimeout, java.lang.String filename, java.lang.String postfix, int port) {

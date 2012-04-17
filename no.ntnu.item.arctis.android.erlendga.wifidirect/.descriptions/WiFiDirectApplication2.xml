@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <block
-    name="WiFi Direct Application" 
-    uuid="_qGHGEEs3EeG1wZORTV2qrw" 
+    name="WiFi Direct Application 2" 
+    uuid="_BE0wYXfhEeGgv5dWA8Tibg" 
     status="under construction" 
     type="block" 
     >
@@ -9,10 +9,8 @@
         <block name="c1" uuid="_AVEEImn7EeGTlN6UOxl_EA"/>
         <block name="c2" uuid="_94GQMeH3EeCKQv4llUXfRg"/>
         <block name="c0" uuid="_8A22Ed6nEeCsi6itJ7ep6w"/>
+        <block name="c6" uuid="_tJdt0HfjEeGvmd26kIl_Pg"/>
         <block name="c5" uuid="_kG8m0ThEEeC7X8PMsGNNiA"/>
-        <block name="c4" uuid="_Kk8_QlL0EeG4bte-bvbkCA"/>
-        <block name="c3" uuid="_pG8pIHKJEeGhXoBnHKZ0YQ"/>
-        <block name="c8" uuid="_FT4QAVJsEeGECvBWYMJF7A"/>
     </required>
     <extras>
         <extra key="android_permission" value="android.permission.ACCESS_WIFI_STATE"/>

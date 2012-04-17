@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<block
+    name="WiFi Direct 2" 
+    uuid="_hlQC8XgTEeGvmd26kIl_Pg" 
+    status="under construction" 
+    type="system" 
+    >
+    <required>
+        <library path="libs/gson-2.1-sources.jar"/>
+        <library path="libs/android-support-v4.jar"/>
+        <library path="libs/gson-2.1.jar"/>
+        <library path="libs/gson-2.1-javadoc.jar"/>
+        <resource path="res/drawable-xhdpi/ic_launcher.png"/>
+        <resource path="res/values/dimens.xml"/>
+        <resource path="res/layout/device_list.xml"/>
+        <resource path="res/layout-large/main.xml"/>
+        <resource path="res/layout/row_devices.xml"/>
+        <resource path="res/drawable-hdpi/ic_launcher.png"/>
+        <resource path="res/layout/device_detail.xml"/>
+        <resource path="res/menu/action_items.xml"/>
+        <resource path="res/drawable/details_view.xml"/>
+        <resource path="res/drawable-hdpi/ic_action_discover.png"/>
+        <resource path="res/drawable-ldpi/ic_launcher.png"/>
+        <resource path="res/drawable-ldpi/ic_action_on_off.png"/>
+        <resource path="res/drawable-ldpi/ic_action_discover.png"/>
+        <resource path="res/drawable/machine.png"/>
+        <resource path="res/drawable-xhdpi/ic_action_on_off.png"/>
+        <resource path="res/values/colors.xml"/>
+        <resource path="res/layout/camera.xml"/>
+        <resource path="res/drawable-xhdpi/ic_action_discover.png"/>
+        <resource path="res/drawable-mdpi/ic_action_discover.png"/>
+        <resource path="res/drawable/section_header.xml"/>
+        <resource path="res/layout-land/main.xml"/>
+        <resource path="res/drawable-hdpi/ic_action_on_off.png"/>
+        <resource path="res/drawable-mdpi/ic_action_on_off.png"/>
+        <resource path="res/layout/main.xml"/>
+        <resource path="res/drawable-mdpi/ic_launcher.png"/>
+        <resource path="res/values/strings.xml"/>
+        <resource path="res/layout/progress_bar.xml"/>
+        <block name="c2" uuid="_BE0wYXfhEeGgv5dWA8Tibg"/>
+        <block name="c0" uuid="_lkMhkN5AEeCc1qVUXAlx-g"/>
+    </required>
+</block>

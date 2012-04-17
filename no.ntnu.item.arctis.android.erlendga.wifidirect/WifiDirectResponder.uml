@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:arctis="http:///schemas/arctis/_WFTqUHjGEdyxtoUMycQn9Q/10" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:graphics="http:///schemas/graphics/_gd9EwIuAEdytfOWtpACIqw/6" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xsi:schemaLocation="http:///schemas/arctis/_WFTqUHjGEdyxtoUMycQn9Q/10 pathmap://ARCTIS_PROFILES/arctis.profile.uml#_WFTqUXjGEdyxtoUMycQn9Q http:///schemas/graphics/_gd9EwIuAEdytfOWtpACIqw/6 pathmap://RAMSES_GRAPHIC_PROFILES/no.ntnu.item.ramses.graphicprofile.uml#_geG1wIuAEdytfOWtpACIqw">
+  <uml:Package xmi:id="_27AfMHyrEeGGysvE_Ik5ig" name="no.ntnu.item.arctis.android.erlendga.wifidirect">
+    <packagedElement xmi:type="uml:Activity" xmi:id="_27AfMXyrEeGGysvE_Ik5ig" name="Wifi Direct Responder" classifierBehavior="_27AfMnyrEeGGysvE_Ik5ig" partition="_27AgUHyrEeGGysvE_Ik5ig">
+      <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_27AfMnyrEeGGysvE_Ik5ig" name="Wifi Direct Responder">
+        <region xmi:id="_27AfM3yrEeGGysvE_Ik5ig" name="&lt;region>">
+          <subvertex xmi:type="uml:Pseudostate" xmi:id="_27AfNHyrEeGGysvE_Ik5ig" name="&lt;initial>"/>
+          <subvertex xmi:type="uml:State" xmi:id="_27AfOHyrEeGGysvE_Ik5ig" name="listening"/>
+          <subvertex xmi:type="uml:FinalState" xmi:id="_N_LiIH4wEeGIq_bpHIm6Dw" name="&lt;final>"/>
+          <subvertex xmi:type="uml:State" xmi:id="_ZwhN8H5LEeG2xILuYxGsMw" name="stopping"/>
+          <transition xmi:id="_-Jvp4HzDEeGGysvE_Ik5ig" name="listen / " source="_27AfNHyrEeGGysvE_Ik5ig" target="_27AfOHyrEeGGysvE_Ik5ig"/>
+          <transition xmi:id="__JX64HzDEeGGysvE_Ik5ig" name=" / failure" source="_27AfOHyrEeGGysvE_Ik5ig" target="_27AfOHyrEeGGysvE_Ik5ig"/>
+          <transition xmi:id="__8RXcHzDEeGGysvE_Ik5ig" name=" / stopped" source="_ZwhN8H5LEeG2xILuYxGsMw" target="_N_LiIH4wEeGIq_bpHIm6Dw"/>
+          <transition xmi:id="_XE9moH5LEeG2xILuYxGsMw" name=" / update" source="_27AfOHyrEeGGysvE_Ik5ig" target="_27AfOHyrEeGGysvE_Ik5ig"/>
+          <transition xmi:id="_ZwcVcH5LEeG2xILuYxGsMw" name="stop / " source="_27AfOHyrEeGGysvE_Ik5ig" target="_ZwhN8H5LEeG2xILuYxGsMw"/>
+        </region>
+      </ownedBehavior>
+      <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_27AfMnyrEeGGysvE_Ik5ig" name="Wifi Direct Responder">
+        <region xmi:id="_27AfM3yrEeGGysvE_Ik5ig" name="&lt;region>">
+          <subvertex xmi:type="uml:Pseudostate" xmi:id="_27AfNHyrEeGGysvE_Ik5ig" name="&lt;initial>"/>
+          <subvertex xmi:type="uml:State" xmi:id="_27AfOHyrEeGGysvE_Ik5ig" name="listening"/>
+          <subvertex xmi:type="uml:FinalState" xmi:id="_N_LiIH4wEeGIq_bpHIm6Dw" name="&lt;final>"/>
+          <subvertex xmi:type="uml:State" xmi:id="_ZwhN8H5LEeG2xILuYxGsMw" name="stopping"/>
+          <transition xmi:id="_-Jvp4HzDEeGGysvE_Ik5ig" name="listen / " source="_27AfNHyrEeGGysvE_Ik5ig" target="_27AfOHyrEeGGysvE_Ik5ig"/>
+          <transition xmi:id="__JX64HzDEeGGysvE_Ik5ig" name=" / failure" source="_27AfOHyrEeGGysvE_Ik5ig" target="_27AfOHyrEeGGysvE_Ik5ig"/>
+          <transition xmi:id="__8RXcHzDEeGGysvE_Ik5ig" name=" / stopped" source="_ZwhN8H5LEeG2xILuYxGsMw" target="_N_LiIH4wEeGIq_bpHIm6Dw"/>
+          <transition xmi:id="_XE9moH5LEeG2xILuYxGsMw" name=" / update" source="_27AfOHyrEeGGysvE_Ik5ig" target="_27AfOHyrEeGGysvE_Ik5ig"/>
+          <transition xmi:id="_ZwcVcH5LEeG2xILuYxGsMw" name="stop / " source="_27AfOHyrEeGGysvE_Ik5ig" target="_ZwhN8H5LEeG2xILuYxGsMw"/>
+        </region>
+      </ownedBehavior>
+      <ownedOperation xmi:id="_27AfRnyrEeGGysvE_Ik5ig" name="setParameters"/>
+      <ownedOperation xmi:id="_27AfR3yrEeGGysvE_Ik5ig" name="startWirelessSettings"/>
+      <ownedOperation xmi:id="_27AfSHyrEeGGysvE_Ik5ig" name="setErrorCode"/>
+      <ownedOperation xmi:id="_27AfSXyrEeGGysvE_Ik5ig" name="setStateEnabled"/>
+      <ownedOperation xmi:id="_27AfSnyrEeGGysvE_Ik5ig" name="peersAvailable"/>
+      <ownedOperation xmi:id="_27AfS3yrEeGGysvE_Ik5ig" name="run"/>
+      <ownedOperation xmi:id="_27AfTHyrEeGGysvE_Ik5ig" name="initWifiDirectConnect"/>
+      <ownedOperation xmi:id="_27AfTXyrEeGGysvE_Ik5ig" name="updateConnectionInfo"/>
+      <ownedOperation xmi:id="_27AfTnyrEeGGysvE_Ik5ig" name="initialize"/>
+      <ownedOperation xmi:id="_27AfT3yrEeGGysvE_Ik5ig" name="onChannelDisconnected"/>
+      <ownedOperation xmi:id="_27AfUHyrEeGGysvE_Ik5ig" name="setFailure"/>
+      <ownedOperation xmi:id="_27AfUXyrEeGGysvE_Ik5ig" name="getNotConnected"/>
+      <ownedOperation xmi:id="_27AfUnyrEeGGysvE_Ik5ig" name="getWifiP2pDisabled"/>
+      <ownedOperation xmi:id="_27AfU3yrEeGGysvE_Ik5ig" name="resumed"/>
+      <ownedOperation xmi:id="_27AfVHyrEeGGysvE_Ik5ig" name="paused"/>
+      <ownedOperation xmi:id="_27AfVXyrEeGGysvE_Ik5ig" name="discover"/>
+      <ownedOperation xmi:id="_27AfVnyrEeGGysvE_Ik5ig" name="discoverFailure"/>
+      <ownedOperation xmi:id="_27AfV3yrEeGGysvE_Ik5ig" name="connectFailure"/>
+      <ownedOperation xmi:id="_27AfWHyrEeGGysvE_Ik5ig" name="setThisDevice"/>
+      <ownedOperation xmi:id="_27AfWXyrEeGGysvE_Ik5ig" name="setConnectionInfo"/>
+      <ownedOperation xmi:id="_27AfWnyrEeGGysvE_Ik5ig" name="setGroupInfo"/>
+      <ownedOperation xmi:id="_27AfW3yrEeGGysvE_Ik5ig" name="checkForUpdate"/>
+      <ownedOperation xmi:id="_27AfXHyrEeGGysvE_Ik5ig" name="stopped"/>
+      <ownedOperation xmi:id="_27AfXXyrEeGGysvE_Ik5ig" name="setStoppedTrue"/>
+      <ownedOperation xmi:id="_27AfXnyrEeGGysvE_Ik5ig" name="setStoppedFalse"/>
+      <ownedOperation xmi:id="_27AfX3yrEeGGysvE_Ik5ig" name="setRGParameters"/>
+      <ownedOperation xmi:id="_27AfYHyrEeGGysvE_Ik5ig" name="setDisconnectedTrue"/>
+      <ownedOperation xmi:id="_27AfYXyrEeGGysvE_Ik5ig" name="setDisconnectedFalse"/>
+      <ownedOperation xmi:id="_27AfYnyrEeGGysvE_Ik5ig" name="setDiscoveringFalse"/>
+      <ownedOperation xmi:id="_27AfY3yrEeGGysvE_Ik5ig" name="setDisconnectingTrue"/>
+      <ownedOperation xmi:id="_27AfZHyrEeGGysvE_Ik5ig" name="setDisconnectingFalse"/>
+      <ownedOperation xmi:id="_27AfZXyrEeGGysvE_Ik5ig" name="setConnectingFalse"/>
+      <ownedOperation xmi:id="_27AfZnyrEeGGysvE_Ik5ig" name="setStoppingTrue"/>
+      <ownedOperation xmi:id="_27AfZ3yrEeGGysvE_Ik5ig" name="foo"/>
+      <ownedOperation xmi:id="_27AfaHyrEeGGysvE_Ik5ig" name="foo2"/>
+      <ownedOperation xmi:id="_27AfaXyrEeGGysvE_Ik5ig" name="setConnectingFalse2"/>
+      <ownedOperation xmi:id="_H2bX0IVaEeGamINjvDxrhg" name="setFalse"/>
+      <ownedOperation xmi:id="_27Afa3yrEeGGysvE_Ik5ig" name="setDisconnectingFalse2"/>
+      <ownedOperation xmi:id="_27AfbHyrEeGGysvE_Ik5ig" name="setDiscoveringTrue"/>
+      <ownedOperation xmi:id="_27AfbXyrEeGGysvE_Ik5ig" name="setConAndDisconFalse"/>
+      <ownedOperation xmi:id="_27AfbnyrEeGGysvE_Ik5ig" name="setDisconnectingFalse1"/>
+      <ownedOperation xmi:id="_8J_OEXzCEeGGysvE_Ik5ig" name="setFailureTrue"/>
+      <ownedOperation xmi:id="_F5BfMXzDEeGGysvE_Ik5ig" name="setFailureFalse"/>
+      <ownedOperation xmi:id="_HkurYH4pEeGIq_bpHIm6Dw" name="checkUpdate"/>
+      <ownedParameter xmi:id="_27Afb3yrEeGGysvE_Ik5ig" name="activityResumed" isStream="true"/>
+      <ownedParameter xmi:id="_27AfcHyrEeGGysvE_Ik5ig" name="stop" isStream="true"/>
+      <ownedParameter xmi:id="_27AfcXyrEeGGysvE_Ik5ig" name="findAndConnect" type="_27Ag0nyrEeGGysvE_Ik5ig" isStream="true"/>
+      <ownedParameter xmi:id="_27AfcnyrEeGGysvE_Ik5ig" name="openWirelessSettings" isStream="true"/>
+      <ownedParameter xmi:id="_27Afc3yrEeGGysvE_Ik5ig" name="stateEnabled" type="_27AgU3yrEeGGysvE_Ik5ig" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_27AfdHyrEeGGysvE_Ik5ig" name="thisDeviceUpdated" type="_27AgVHyrEeGGysvE_Ik5ig" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_27AfdXyrEeGGysvE_Ik5ig" name="connectionInfo" type="_27AgVXyrEeGGysvE_Ik5ig" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_27AfdnyrEeGGysvE_Ik5ig" name="groupInfoReceived" type="_27AgVnyrEeGGysvE_Ik5ig" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_27Afd3yrEeGGysvE_Ik5ig" name="failure" type="_27AgfXyrEeGGysvE_Ik5ig" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_27AfeHyrEeGGysvE_Ik5ig" name="activityDestroyed" isStream="true"/>
+      <ownedParameter xmi:id="_27AfeXyrEeGGysvE_Ik5ig" name="cancelConnectionProcess" isStream="true"/>
+      <ownedParameter xmi:id="_27AfenyrEeGGysvE_Ik5ig" name="stopped" direction="out"/>
+      <ownedParameter xmi:id="_27Afe3yrEeGGysvE_Ik5ig" name="stop" isStream="true"/>
+      <ownedParameter xmi:id="_27AffHyrEeGGysvE_Ik5ig" name="connectedAsGroupOwner" type="_27AgVXyrEeGGysvE_Ik5ig" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_27AffXyrEeGGysvE_Ik5ig" name="stopped" direction="out"/>
+      <ownedParameter xmi:id="_27AffnyrEeGGysvE_Ik5ig" name="listen"/>
+      <ownedParameter xmi:id="_27Aff3yrEeGGysvE_Ik5ig" name="channelLost" type="_27AgfXyrEeGGysvE_Ik5ig" direction="out" isStream="true"/>
+      <ownedParameter xmi:id="_27AfgHyrEeGGysvE_Ik5ig" name="disconnected" parameterSet="_raTfMH43EeG2xILuYxGsMw" direction="out"/>
+      <ownedParameter xmi:id="_4bGxIH45EeG2xILuYxGsMw" name="update" type="_27Ag3HyrEeGGysvE_Ik5ig" direction="out" isStream="true"/>
+      <ownedParameterSet xmi:id="_yDi_AHzBEeGGysvE_Ik5ig" name="failure"/>
+      <ownedParameterSet xmi:id="_ypN34HzBEeGGysvE_Ik5ig" name="disconnected"/>
+      <ownedParameterSet xmi:id="_raTfMH43EeG2xILuYxGsMw" name="disconnected" parameter="_27AfgHyrEeGGysvE_Ik5ig"/>
+      <variable xmi:id="_-4FcoH4uEeGIq_bpHIm6Dw" name="update" type="_27Ag3HyrEeGGysvE_Ik5ig"/>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="_27AflnyrEeGGysvE_Ik5ig" name="failure" incoming="_SxdcIHzBEeGGysvE_Ik5ig" inPartition="_27AgUHyrEeGGysvE_Ik5ig" type="_27AgfXyrEeGGysvE_Ik5ig" parameter="_27Afd3yrEeGGysvE_Ik5ig"/>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="_27Af4XyrEeGGysvE_Ik5ig" name="listen" outgoing="_BKC5gHzBEeGGysvE_Ik5ig" inPartition="_27AgUHyrEeGGysvE_Ik5ig" parameter="_27AffnyrEeGGysvE_Ik5ig"/>
+      <node xmi:type="uml:CallBehaviorAction" xmi:id="_4nTcYHzAEeGGysvE_Ik5ig" name="c0" inPartition="_27AgUHyrEeGGysvE_Ik5ig" behavior="_pCAT0XmREeGhn5DJy4D0qQ">
+        <argument xmi:id="_4nVRkHzAEeGGysvE_Ik5ig" name="stop" incoming="_ZhnokH5GEeG2xILuYxGsMw" inPartition="_27AgUHyrEeGGysvE_Ik5ig"/>
+        <argument xmi:id="_4nV4oHzAEeGGysvE_Ik5ig" name="findAndConnect" inPartition="_27AgUHyrEeGGysvE_Ik5ig" type="_27Ag0nyrEeGGysvE_Ik5ig"/>
+        <argument xmi:id="_4naKEHzAEeGGysvE_Ik5ig" name="listen" incoming="_BKC5gHzBEeGGysvE_Ik5ig" inPartition="_27AgUHyrEeGGysvE_Ik5ig"/>
+        <argument xmi:id="_4naxIHzAEeGGysvE_Ik5ig" name="disconnect" inPartition="_27AgUHyrEeGGysvE_Ik5ig"/>
+        <result xmi:id="_4nXGwHzAEeGGysvE_Ik5ig" name="failure" outgoing="_SxdcIHzBEeGGysvE_Ik5ig" inPartition="_27AgUHyrEeGGysvE_Ik5ig" type="_27AgfXyrEeGGysvE_Ik5ig"/>
+        <result xmi:id="_4nYU4HzAEeGGysvE_Ik5ig" name="stopped" outgoing="_bjrbMH4rEeGIq_bpHIm6Dw" inPartition="_27AgUHyrEeGGysvE_Ik5ig"/>
+        <result xmi:id="_4nY78HzAEeGGysvE_Ik5ig" name="update" outgoing="_amBkoHzBEeGGysvE_Ik5ig" inPartition="_27AgUHyrEeGGysvE_Ik5ig" type="_27Ag3HyrEeGGysvE_Ik5ig"/>
+        <result xmi:id="_4nb_QHzAEeGGysvE_Ik5ig" name="disconnected" inPartition="_27AgUHyrEeGGysvE_Ik5ig"/>
+      </node>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="_W5zxkHzBEeGGysvE_Ik5ig" name="stopped" incoming="_bjrbMH4rEeGIq_bpHIm6Dw" inPartition="_27AgUHyrEeGGysvE_Ik5ig" parameter="_27AffXyrEeGGysvE_Ik5ig"/>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="_pGMukH43EeG2xILuYxGsMw" name="stop" outgoing="_ZhnokH5GEeG2xILuYxGsMw" inPartition="_27AgUHyrEeGGysvE_Ik5ig" parameter="_27Afe3yrEeGGysvE_Ik5ig"/>
+      <node xmi:type="uml:ActivityParameterNode" xmi:id="_4bE78H45EeG2xILuYxGsMw" name="update" incoming="_amBkoHzBEeGGysvE_Ik5ig" inPartition="_27AgUHyrEeGGysvE_Ik5ig" type="_27Ag3HyrEeGGysvE_Ik5ig" parameter="_4bGxIH45EeG2xILuYxGsMw"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_BKC5gHzBEeGGysvE_Ik5ig" name="e0" source="_27Af4XyrEeGGysvE_Ik5ig" target="_4naKEHzAEeGGysvE_Ik5ig" inPartition="_27AgUHyrEeGGysvE_Ik5ig"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_SxdcIHzBEeGGysvE_Ik5ig" name="e3" source="_4nXGwHzAEeGGysvE_Ik5ig" target="_27AflnyrEeGGysvE_Ik5ig" inPartition="_27AgUHyrEeGGysvE_Ik5ig"/>
+      <edge xmi:type="uml:ObjectFlow" xmi:id="_amBkoHzBEeGGysvE_Ik5ig" name="e4" source="_4nY78HzAEeGGysvE_Ik5ig" target="_4bE78H45EeG2xILuYxGsMw" inPartition="_27AgUHyrEeGGysvE_Ik5ig"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_bjrbMH4rEeGIq_bpHIm6Dw" name="e7" source="_4nYU4HzAEeGGysvE_Ik5ig" target="_W5zxkHzBEeGGysvE_Ik5ig" inPartition="_27AgUHyrEeGGysvE_Ik5ig"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_ZhnokH5GEeG2xILuYxGsMw" name="e1" source="_pGMukH43EeG2xILuYxGsMw" target="_4nVRkHzAEeGGysvE_Ik5ig" inPartition="_27AgUHyrEeGGysvE_Ik5ig"/>
+      <group xmi:type="uml:ActivityPartition" xmi:id="_27AgUHyrEeGGysvE_Ik5ig" name="main" node="_27AflnyrEeGGysvE_Ik5ig _27Af4XyrEeGGysvE_Ik5ig _4nTcYHzAEeGGysvE_Ik5ig _4nVRkHzAEeGGysvE_Ik5ig _4nV4oHzAEeGGysvE_Ik5ig _4nXGwHzAEeGGysvE_Ik5ig _4nYU4HzAEeGGysvE_Ik5ig _4nY78HzAEeGGysvE_Ik5ig _4naKEHzAEeGGysvE_Ik5ig _4naxIHzAEeGGysvE_Ik5ig _4nb_QHzAEeGGysvE_Ik5ig _W5zxkHzBEeGGysvE_Ik5ig _pGMukH43EeG2xILuYxGsMw _4bE78H45EeG2xILuYxGsMw" edge="_BKC5gHzBEeGGysvE_Ik5ig _SxdcIHzBEeGGysvE_Ik5ig _amBkoHzBEeGGysvE_Ik5ig _bjrbMH4rEeGIq_bpHIm6Dw _ZhnokH5GEeG2xILuYxGsMw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27AgUXyrEeGGysvE_Ik5ig" name="no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirect1.WifiDirectInfo1"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27AgUnyrEeGGysvE_Ik5ig" name="no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectreceive.WifiDirectReceiveInfo"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27AgU3yrEeGGysvE_Ik5ig" name="boolean"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27AgVHyrEeGGysvE_Ik5ig" name="android.net.wifi.p2p.WifiP2pDevice"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27AgVXyrEeGGysvE_Ik5ig" name="android.net.wifi.p2p.WifiP2pInfo"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27AgVnyrEeGGysvE_Ik5ig" name="android.net.wifi.p2p.WifiP2pGroup"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27Age3yrEeGGysvE_Ik5ig" name="no.ntnu.item.arctis.android.erlendga.wifidirect.discover.DiscoverInfo"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27AgfHyrEeGGysvE_Ik5ig" name="android.net.wifi.p2p.WifiP2pDeviceList"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27AgfXyrEeGGysvE_Ik5ig" name="int"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27AgnXyrEeGGysvE_Ik5ig" name="no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirectconnect.WifiDirectConnectInfo"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27Ag0nyrEeGGysvE_Ik5ig" name="android.net.wifi.p2p.WifiP2pConfig"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_27Ag1XyrEeGGysvE_Ik5ig" name=""/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_27Ag1nyrEeGGysvE_Ik5ig" name=""/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_27Ag13yrEeGGysvE_Ik5ig" name=""/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_27Ag2nyrEeGGysvE_Ik5ig" name="r3"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_27Ag23yrEeGGysvE_Ik5ig" name=""/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27Ag3HyrEeGGysvE_Ik5ig" name="no.ntnu.item.arctis.android.erlendga.wifidirect.wifidirect4.WifiDirect4Update"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_27Ag33yrEeGGysvE_Ik5ig" name="r1"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_27Ag4HyrEeGGysvE_Ik5ig" name=""/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_27Ag4XyrEeGGysvE_Ik5ig" name="no.ntnu.item.arctis.android.erlendga.wifidirect.removegroup.RemoveGroupInfo"/>
+    <packagedElement xmi:type="uml:Package" xmi:id="_4niF4HzAEeGGysvE_Ik5ig" name="no.ntnu.item.arctis.android.erlendga.wifidirect">
+      <packagedElement xmi:type="uml:Activity" xmi:id="_pCAT0XmREeGhn5DJy4D0qQ" name="Wifi Direct 4" classifierBehavior="_4nj7EHzAEeGGysvE_Ik5ig" partition="_4niF4nzAEeGGysvE_Ik5ig">
+        <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_4nj7EHzAEeGGysvE_Ik5ig" name="Wifi Direct 4">
+          <region xmi:id="_4nj7FHzAEeGGysvE_Ik5ig" name="&lt;region>">
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_4nj7FXzAEeGGysvE_Ik5ig" name="&lt;initial>"/>
+            <subvertex xmi:type="uml:State" xmi:id="_4nkiIHzAEeGGysvE_Ik5ig" name="active"/>
+            <subvertex xmi:type="uml:FinalState" xmi:id="_4nkiIXzAEeGGysvE_Ik5ig" name="&lt;final>"/>
+            <subvertex xmi:type="uml:State" xmi:id="_4nkiInzAEeGGysvE_Ik5ig" name="stopping"/>
+            <subvertex xmi:type="uml:State" xmi:id="_4nkiI3zAEeGGysvE_Ik5ig" name="listening"/>
+            <subvertex xmi:type="uml:State" xmi:id="_4nkiJHzAEeGGysvE_Ik5ig" name="disconnecting"/>
+            <transition xmi:id="_4nkiJXzAEeGGysvE_Ik5ig" name="listen / " source="_4nj7FXzAEeGGysvE_Ik5ig" target="_4nkiI3zAEeGGysvE_Ik5ig"/>
+            <transition xmi:id="_4nlJMHzAEeGGysvE_Ik5ig" name=" / failure" source="_4nkiIHzAEeGGysvE_Ik5ig" target="_4nkiIHzAEeGGysvE_Ik5ig"/>
+            <transition xmi:id="_4nlwQHzAEeGGysvE_Ik5ig" name=" / update" source="_4nkiIHzAEeGGysvE_Ik5ig" target="_4nkiIHzAEeGGysvE_Ik5ig"/>
+            <transition xmi:id="_4nlwQnzAEeGGysvE_Ik5ig" name="stop / " source="_4nkiIHzAEeGGysvE_Ik5ig" target="_4nkiInzAEeGGysvE_Ik5ig"/>
+            <transition xmi:id="_4nmXUXzAEeGGysvE_Ik5ig" name=" / stopped" source="_4nkiInzAEeGGysvE_Ik5ig" target="_4nkiIXzAEeGGysvE_Ik5ig"/>
+            <transition xmi:id="_4nm-YHzAEeGGysvE_Ik5ig" name="findAndConnect / " source="_4nkiI3zAEeGGysvE_Ik5ig" target="_4nkiIHzAEeGGysvE_Ik5ig"/>
+            <transition xmi:id="_4nm-YnzAEeGGysvE_Ik5ig" name="disconnect / " source="_4nkiIHzAEeGGysvE_Ik5ig" target="_4nkiJHzAEeGGysvE_Ik5ig"/>
+            <transition xmi:id="_4nm-ZHzAEeGGysvE_Ik5ig" name=" / failure" source="_4nkiI3zAEeGGysvE_Ik5ig" target="_4nkiI3zAEeGGysvE_Ik5ig"/>
+            <transition xmi:id="_4nnlcXzAEeGGysvE_Ik5ig" name="stop / " source="_4nkiI3zAEeGGysvE_Ik5ig" target="_4nkiInzAEeGGysvE_Ik5ig"/>
+            <transition xmi:id="_4nnlc3zAEeGGysvE_Ik5ig" name=" / update" source="_4nkiI3zAEeGGysvE_Ik5ig" target="_4nkiI3zAEeGGysvE_Ik5ig"/>
+            <transition xmi:id="_4noMgHzAEeGGysvE_Ik5ig" name="disconnect / " source="_4nkiI3zAEeGGysvE_Ik5ig" target="_4nkiJHzAEeGGysvE_Ik5ig"/>
+            <transition xmi:id="_4noMgnzAEeGGysvE_Ik5ig" name=" / disconnected" source="_4nkiJHzAEeGGysvE_Ik5ig" target="_4nkiI3zAEeGGysvE_Ik5ig"/>
+          </region>
+        </ownedBehavior>
+        <ownedParameter xmi:id="_4nis8XzAEeGGysvE_Ik5ig" name="stop" isStream="true"/>
+        <ownedParameter xmi:id="_4nis83zAEeGGysvE_Ik5ig" name="findAndConnect" type="_27Ag0nyrEeGGysvE_Ik5ig" isStream="true"/>
+        <ownedParameter xmi:id="_4nis9XzAEeGGysvE_Ik5ig" name="failure" type="_27AgfXyrEeGGysvE_Ik5ig" direction="out" isStream="true"/>
+        <ownedParameter xmi:id="_4nis93zAEeGGysvE_Ik5ig" name="stopped" direction="out"/>
+        <ownedParameter xmi:id="_4njUAHzAEeGGysvE_Ik5ig" name="update" type="_27Ag3HyrEeGGysvE_Ik5ig" direction="out" isStream="true"/>
+        <ownedParameter xmi:id="_4njUAnzAEeGGysvE_Ik5ig" name="listen"/>
+        <ownedParameter xmi:id="_4njUBHzAEeGGysvE_Ik5ig" name="disconnect" isStream="true"/>
+        <ownedParameter xmi:id="_4njUBnzAEeGGysvE_Ik5ig" name="disconnected" direction="out" isStream="true"/>
+        <node xmi:type="uml:ActivityParameterNode" xmi:id="_4nis8HzAEeGGysvE_Ik5ig" name="stop" inPartition="_4niF4nzAEeGGysvE_Ik5ig" parameter="_4nis8XzAEeGGysvE_Ik5ig"/>
+        <node xmi:type="uml:ActivityParameterNode" xmi:id="_4nis8nzAEeGGysvE_Ik5ig" name="findAndConnect" inPartition="_4niF4nzAEeGGysvE_Ik5ig" type="_27Ag0nyrEeGGysvE_Ik5ig" parameter="_4nis83zAEeGGysvE_Ik5ig"/>
+        <node xmi:type="uml:ActivityParameterNode" xmi:id="_4nis9HzAEeGGysvE_Ik5ig" name="failure" inPartition="_4niF4nzAEeGGysvE_Ik5ig" type="_27AgfXyrEeGGysvE_Ik5ig" parameter="_4nis9XzAEeGGysvE_Ik5ig"/>
+        <node xmi:type="uml:ActivityParameterNode" xmi:id="_4nis9nzAEeGGysvE_Ik5ig" name="stopped" inPartition="_4niF4nzAEeGGysvE_Ik5ig" parameter="_4nis93zAEeGGysvE_Ik5ig"/>
+        <node xmi:type="uml:ActivityParameterNode" xmi:id="_4nis-HzAEeGGysvE_Ik5ig" name="update" inPartition="_4niF4nzAEeGGysvE_Ik5ig" type="_27Ag3HyrEeGGysvE_Ik5ig" parameter="_4njUAHzAEeGGysvE_Ik5ig"/>
+        <node xmi:type="uml:ActivityParameterNode" xmi:id="_4njUAXzAEeGGysvE_Ik5ig" name="listen" inPartition="_4niF4nzAEeGGysvE_Ik5ig" parameter="_4njUAnzAEeGGysvE_Ik5ig"/>
+        <node xmi:type="uml:ActivityParameterNode" xmi:id="_4njUA3zAEeGGysvE_Ik5ig" name="disconnect" inPartition="_4niF4nzAEeGGysvE_Ik5ig" parameter="_4njUBHzAEeGGysvE_Ik5ig"/>
+        <node xmi:type="uml:ActivityParameterNode" xmi:id="_4njUBXzAEeGGysvE_Ik5ig" name="disconnected" inPartition="_4niF4nzAEeGGysvE_Ik5ig" parameter="_4njUBnzAEeGGysvE_Ik5ig"/>
+        <group xmi:type="uml:ActivityPartition" xmi:id="_4niF4nzAEeGGysvE_Ik5ig" name="main" node="_4nis8HzAEeGGysvE_Ik5ig _4nis8nzAEeGGysvE_Ik5ig _4nis9HzAEeGGysvE_Ik5ig _4nis9nzAEeGGysvE_Ik5ig _4nis-HzAEeGGysvE_Ik5ig _4njUAXzAEeGGysvE_Ik5ig _4njUA3zAEeGGysvE_Ik5ig _4njUBXzAEeGGysvE_Ik5ig"/>
+      </packagedElement>
+      <profileApplication xmi:id="_4nj7EXzAEeGGysvE_Ik5ig">
+        <eAnnotations xmi:id="_4nj7EnzAEeGGysvE_Ik5ig" source="http://www.eclipse.org/uml2/2.0.0/UML">
+          <references xmi:type="ecore:EPackage" href="pathmap://ARCTIS_PROFILES/arctis.profile.uml#_WFTqUXjGEdyxtoUMycQn9Q"/>
+        </eAnnotations>
+        <appliedProfile href="pathmap://ARCTIS_PROFILES/arctis.profile.uml#_rE77YK4iEduZSuTiwKs5Lw"/>
+      </profileApplication>
+    </packagedElement>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="__pSz8H4qEeGIq_bpHIm6Dw" name="r0"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="__pUCEH4qEeGIq_bpHIm6Dw" name=""/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_jslUoH4uEeGIq_bpHIm6Dw" name="r1"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_jsnJ0H4uEeGIq_bpHIm6Dw" name=""/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_18m58H4vEeGIq_bpHIm6Dw" name="r2"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_18oIEX4vEeGIq_bpHIm6Dw" name=""/>
+    <profileApplication xmi:id="_27Ag93yrEeGGysvE_Ik5ig">
+      <eAnnotations xmi:id="_27Ag-HyrEeGGysvE_Ik5ig" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="pathmap://ARCTIS_PROFILES/arctis.profile.uml#_WFTqUXjGEdyxtoUMycQn9Q"/>
+      </eAnnotations>
+      <appliedProfile href="pathmap://ARCTIS_PROFILES/arctis.profile.uml#_rE77YK4iEduZSuTiwKs5Lw"/>
+    </profileApplication>
+    <profileApplication xmi:id="_27Ag-XyrEeGGysvE_Ik5ig">
+      <eAnnotations xmi:id="_27Ag-nyrEeGGysvE_Ik5ig" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="pathmap://RAMSES_GRAPHIC_PROFILES/no.ntnu.item.ramses.graphicprofile.uml#_geG1wIuAEdytfOWtpACIqw"/>
+      </eAnnotations>
+      <appliedProfile href="pathmap://RAMSES_GRAPHIC_PROFILES/no.ntnu.item.ramses.graphicprofile.uml#_UEANMUVlEduH9aQE_pc66w"/>
+    </profileApplication>
+  </uml:Package>
+  <graphics:Shape xmi:id="_27Ag-3yrEeGGysvE_Ik5ig" x="180" y="54" width="505" height="55" base_Element="_27AfMXyrEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_27Ag-3yrEeGGysvE_Ik5ig" x="180" y="54" width="505" height="55" base_Element="_27AfMXyrEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_27Ag_HyrEeGGysvE_Ik5ig" x="180" y="108" width="505" height="253" base_Element="_27AgUHyrEeGGysvE_Ik5ig"/>
+  <arctis:esm xmi:id="_27Ag_XyrEeGGysvE_Ik5ig" base_StateMachine="_27AfMnyrEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_27AhE3yrEeGGysvE_Ik5ig" x="684" y="180" base_Element="_27AflnyrEeGGysvE_Ik5ig" orientation="east"/>
+  <graphics:Shape xmi:id="_27AhfnyrEeGGysvE_Ik5ig" x="126" y="180" base_Element="_27Af4XyrEeGGysvE_Ik5ig" orientation="west"/>
+  <graphics:Shape xmi:id="_4ndNYHzAEeGGysvE_Ik5ig" x="1" y="18" base_Element="_4nXGwHzAEeGGysvE_Ik5ig" orientation="east"/>
+  <graphics:Shape xmi:id="_4nd0cHzAEeGGysvE_Ik5ig" x="259" y="106" base_Element="_4nYU4HzAEeGGysvE_Ik5ig" orientation="east"/>
+  <graphics:Shape xmi:id="_4nd0cXzAEeGGysvE_Ik5ig" x="1" y="54" base_Element="_4nY78HzAEeGGysvE_Ik5ig" orientation="east"/>
+  <graphics:Shape xmi:id="_4nebgHzAEeGGysvE_Ik5ig" x="1" y="126" base_Element="_4nb_QHzAEeGGysvE_Ik5ig" orientation="east"/>
+  <graphics:Shape xmi:id="_4nfCkHzAEeGGysvE_Ik5ig" x="1" y="90" base_Element="_4nVRkHzAEeGGysvE_Ik5ig" orientation="west"/>
+  <graphics:Shape xmi:id="_4nfCkXzAEeGGysvE_Ik5ig" x="1" y="54" base_Element="_4nV4oHzAEeGGysvE_Ik5ig" orientation="west"/>
+  <graphics:Shape xmi:id="_4nfpoHzAEeGGysvE_Ik5ig" x="18" y="18" base_Element="_4naKEHzAEeGGysvE_Ik5ig" orientation="west"/>
+  <graphics:Shape xmi:id="_4nfpoXzAEeGGysvE_Ik5ig" x="1" y="126" base_Element="_4naxIHzAEeGGysvE_Ik5ig" orientation="west"/>
+  <graphics:Shape xmi:id="_4ngQsHzAEeGGysvE_Ik5ig" x="216" y="144" width="429" height="199" aux1="single" base_Element="_4nTcYHzAEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_27Ag_HyrEeGGysvE_Ik5ig" x="180" y="108" width="505" height="253" base_Element="_27AgUHyrEeGGysvE_Ik5ig"/>
+  <arctis:esm xmi:id="_4nj7E3zAEeGGysvE_Ik5ig" base_StateMachine="_4nj7EHzAEeGGysvE_Ik5ig"/>
+  <arctis:esm xmi:id="_27Ag_XyrEeGGysvE_Ik5ig" base_StateMachine="_27AfMnyrEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nkiJnzAEeGGysvE_Ik5ig" base_Transition="_4nkiJXzAEeGGysvE_Ik5ig" triggers="_4njUAXzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nlJMXzAEeGGysvE_Ik5ig" base_Transition="_4nlJMHzAEeGGysvE_Ik5ig" effects="_4nis9HzAEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_27AhE3yrEeGGysvE_Ik5ig" x="684" y="180" base_Element="_27AflnyrEeGGysvE_Ik5ig" orientation="east"/>
+  <arctis:event xmi:id="_4nlwQXzAEeGGysvE_Ik5ig" base_Transition="_4nlwQHzAEeGGysvE_Ik5ig" effects="_4nis-HzAEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_27AhfnyrEeGGysvE_Ik5ig" x="126" y="180" base_Element="_27Af4XyrEeGGysvE_Ik5ig" orientation="west"/>
+  <arctis:event xmi:id="_4nmXUHzAEeGGysvE_Ik5ig" base_Transition="_4nlwQnzAEeGGysvE_Ik5ig" triggers="_4nis8HzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nmXUnzAEeGGysvE_Ik5ig" base_Transition="_4nmXUXzAEeGGysvE_Ik5ig" effects="_4nis9nzAEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_4ndNYHzAEeGGysvE_Ik5ig" x="1" y="18" base_Element="_4nXGwHzAEeGGysvE_Ik5ig" orientation="east"/>
+  <graphics:Shape xmi:id="_4nd0cHzAEeGGysvE_Ik5ig" x="259" y="106" base_Element="_4nYU4HzAEeGGysvE_Ik5ig" orientation="east"/>
+  <arctis:event xmi:id="_4nm-YXzAEeGGysvE_Ik5ig" base_Transition="_4nm-YHzAEeGGysvE_Ik5ig" triggers="_4nis8nzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nm-Y3zAEeGGysvE_Ik5ig" base_Transition="_4nm-YnzAEeGGysvE_Ik5ig" triggers="_4njUA3zAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nnlcHzAEeGGysvE_Ik5ig" base_Transition="_4nm-ZHzAEeGGysvE_Ik5ig" effects="_4nis9HzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nnlcnzAEeGGysvE_Ik5ig" base_Transition="_4nnlcXzAEeGGysvE_Ik5ig" triggers="_4nis8HzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nnldHzAEeGGysvE_Ik5ig" base_Transition="_4nnlc3zAEeGGysvE_Ik5ig" effects="_4nis-HzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4noMgXzAEeGGysvE_Ik5ig" base_Transition="_4noMgHzAEeGGysvE_Ik5ig" triggers="_4njUA3zAEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_4nd0cXzAEeGGysvE_Ik5ig" x="1" y="54" base_Element="_4nY78HzAEeGGysvE_Ik5ig" orientation="east"/>
+  <arctis:event xmi:id="_4noMg3zAEeGGysvE_Ik5ig" base_Transition="_4noMgnzAEeGGysvE_Ik5ig" effects="_4njUBXzAEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_4nebgHzAEeGGysvE_Ik5ig" x="1" y="126" base_Element="_4nb_QHzAEeGGysvE_Ik5ig" orientation="east"/>
+  <graphics:Shape xmi:id="_Xb2HoHzBEeGGysvE_Ik5ig" x="684" y="252" base_Element="_W5zxkHzBEeGGysvE_Ik5ig" orientation="east"/>
+  <graphics:Shape xmi:id="_4nfCkHzAEeGGysvE_Ik5ig" x="1" y="90" base_Element="_4nVRkHzAEeGGysvE_Ik5ig" orientation="west"/>
+  <arctis:event xmi:id="_-JyGIHzDEeGGysvE_Ik5ig" base_Transition="_-Jvp4HzDEeGGysvE_Ik5ig" triggers="_27Af4XyrEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_4nfCkXzAEeGGysvE_Ik5ig" x="1" y="54" base_Element="_4nV4oHzAEeGGysvE_Ik5ig" orientation="west"/>
+  <graphics:Shape xmi:id="_4nfpoHzAEeGGysvE_Ik5ig" x="18" y="18" base_Element="_4naKEHzAEeGGysvE_Ik5ig" orientation="west"/>
+  <arctis:event xmi:id="__JaXIHzDEeGGysvE_Ik5ig" base_Transition="__JX64HzDEeGGysvE_Ik5ig" effects="_27AflnyrEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_4nfpoXzAEeGGysvE_Ik5ig" x="1" y="126" base_Element="_4naxIHzAEeGGysvE_Ik5ig" orientation="west"/>
+  <arctis:event xmi:id="__8TzsHzDEeGGysvE_Ik5ig" base_Transition="__8RXcHzDEeGGysvE_Ik5ig" effects="_W5zxkHzBEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_4ngQsHzAEeGGysvE_Ik5ig" x="216" y="144" width="429" height="199" aux1="single" base_Element="_4nTcYHzAEeGGysvE_Ik5ig"/>
+  <arctis:location xmi:id="_-4GDsH4uEeGIq_bpHIm6Dw" base_Variable="_-4FcoH4uEeGIq_bpHIm6Dw" partition="_27AgUHyrEeGGysvE_Ik5ig"/>
+  <arctis:esm xmi:id="_4nj7E3zAEeGGysvE_Ik5ig" base_StateMachine="_4nj7EHzAEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_-4GqwH4uEeGIq_bpHIm6Dw" x="234" y="126" base_Element="_-4FcoH4uEeGIq_bpHIm6Dw"/>
+  <graphics:Shape xmi:id="_pfmtEH43EeG2xILuYxGsMw" x="126" y="252" base_Element="_pGMukH43EeG2xILuYxGsMw" orientation="west"/>
+  <graphics:Shape xmi:id="_49YXwH45EeG2xILuYxGsMw" x="684" y="216" base_Element="_4bE78H45EeG2xILuYxGsMw" orientation="east"/>
+  <arctis:event xmi:id="_XFAp8H5LEeG2xILuYxGsMw" base_Transition="_XE9moH5LEeG2xILuYxGsMw" effects="_4bE78H45EeG2xILuYxGsMw"/>
+  <arctis:event xmi:id="_4nkiJnzAEeGGysvE_Ik5ig" base_Transition="_4nkiJXzAEeGGysvE_Ik5ig" triggers="_4njUAXzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_ZweKoH5LEeG2xILuYxGsMw" base_Transition="_ZwcVcH5LEeG2xILuYxGsMw" triggers="_pGMukH43EeG2xILuYxGsMw"/>
+  <arctis:event xmi:id="_4nlJMXzAEeGGysvE_Ik5ig" base_Transition="_4nlJMHzAEeGGysvE_Ik5ig" effects="_4nis9HzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nlwQXzAEeGGysvE_Ik5ig" base_Transition="_4nlwQHzAEeGGysvE_Ik5ig" effects="_4nis-HzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nmXUHzAEeGGysvE_Ik5ig" base_Transition="_4nlwQnzAEeGGysvE_Ik5ig" triggers="_4nis8HzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nmXUnzAEeGGysvE_Ik5ig" base_Transition="_4nmXUXzAEeGGysvE_Ik5ig" effects="_4nis9nzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nm-YXzAEeGGysvE_Ik5ig" base_Transition="_4nm-YHzAEeGGysvE_Ik5ig" triggers="_4nis8nzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nm-Y3zAEeGGysvE_Ik5ig" base_Transition="_4nm-YnzAEeGGysvE_Ik5ig" triggers="_4njUA3zAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nnlcHzAEeGGysvE_Ik5ig" base_Transition="_4nm-ZHzAEeGGysvE_Ik5ig" effects="_4nis9HzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nnlcnzAEeGGysvE_Ik5ig" base_Transition="_4nnlcXzAEeGGysvE_Ik5ig" triggers="_4nis8HzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4nnldHzAEeGGysvE_Ik5ig" base_Transition="_4nnlc3zAEeGGysvE_Ik5ig" effects="_4nis-HzAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4noMgXzAEeGGysvE_Ik5ig" base_Transition="_4noMgHzAEeGGysvE_Ik5ig" triggers="_4njUA3zAEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="_4noMg3zAEeGGysvE_Ik5ig" base_Transition="_4noMgnzAEeGGysvE_Ik5ig" effects="_4njUBXzAEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_Xb2HoHzBEeGGysvE_Ik5ig" x="684" y="252" base_Element="_W5zxkHzBEeGGysvE_Ik5ig" orientation="east"/>
+  <arctis:event xmi:id="_-JyGIHzDEeGGysvE_Ik5ig" base_Transition="_-Jvp4HzDEeGGysvE_Ik5ig" triggers="_27Af4XyrEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="__JaXIHzDEeGGysvE_Ik5ig" base_Transition="__JX64HzDEeGGysvE_Ik5ig" effects="_27AflnyrEeGGysvE_Ik5ig"/>
+  <arctis:event xmi:id="__8TzsHzDEeGGysvE_Ik5ig" base_Transition="__8RXcHzDEeGGysvE_Ik5ig" effects="_W5zxkHzBEeGGysvE_Ik5ig"/>
+  <arctis:location xmi:id="_-4GDsH4uEeGIq_bpHIm6Dw" base_Variable="_-4FcoH4uEeGIq_bpHIm6Dw" partition="_27AgUHyrEeGGysvE_Ik5ig"/>
+  <graphics:Shape xmi:id="_-4GqwH4uEeGIq_bpHIm6Dw" x="234" y="126" base_Element="_-4FcoH4uEeGIq_bpHIm6Dw"/>
+  <graphics:Shape xmi:id="_pfmtEH43EeG2xILuYxGsMw" x="126" y="252" base_Element="_pGMukH43EeG2xILuYxGsMw" orientation="west"/>
+  <graphics:Shape xmi:id="_49YXwH45EeG2xILuYxGsMw" x="684" y="216" base_Element="_4bE78H45EeG2xILuYxGsMw" orientation="east"/>
+  <arctis:event xmi:id="_XFAp8H5LEeG2xILuYxGsMw" base_Transition="_XE9moH5LEeG2xILuYxGsMw" effects="_4bE78H45EeG2xILuYxGsMw"/>
+  <arctis:event xmi:id="_ZweKoH5LEeG2xILuYxGsMw" base_Transition="_ZwcVcH5LEeG2xILuYxGsMw" triggers="_pGMukH43EeG2xILuYxGsMw"/>
+  <graphics:Shape xmi:id="_LXzM0IVaEeGamINjvDxrhg" x="180" y="54" width="505" height="55" base_Element="_27AfMXyrEeGGysvE_Ik5ig"/>
+</xmi:XMI>

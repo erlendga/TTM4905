@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<block
+    name="Wifi Direct Initiator" 
+    uuid="_OVPR0XyoEeGGysvE_Ik5ig" 
+    status="under construction" 
+    type="block" 
+    >
+    <required>
+        <block name="c0" uuid="_pCAT0XmREeGhn5DJy4D0qQ"/>
+    </required>
+</block>

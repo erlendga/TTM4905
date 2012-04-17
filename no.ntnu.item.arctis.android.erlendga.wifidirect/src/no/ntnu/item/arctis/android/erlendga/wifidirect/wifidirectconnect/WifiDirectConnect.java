@@ -27,32 +27,25 @@ public class WifiDirectConnect extends Block {
 	private BroadcastReceiver receiver;
 	public boolean isConnected;
 	public boolean isWifiP2pEnabled;
-	public void unwrap(WifiDirectConnectInfo connectInfo) {
-		channel = connectInfo.channel;
-		config = connectInfo.config;
-		manager = connectInfo.manager;
-	}
-
-	public ConnectInfo initConnect() {
-		ConnectInfo connectInfo = new ConnectInfo();
+	public ConnectInfo connectInfo = new ConnectInfo();
+	public CancelConnectInfo cancelConnectInfo = new CancelConnectInfo();
+	public RemoveGroupInfo removeGroupInfo = new RemoveGroupInfo();
+	public boolean connected = false;
+	
+	public void setParameters(WifiDirectConnectInfo wifiDirectConnectInfo) {
+		channel = wifiDirectConnectInfo.channel;
+		config = wifiDirectConnectInfo.config;
+		manager = wifiDirectConnectInfo.manager;
+		
 		connectInfo.channel = channel;
 		connectInfo.config = config;
 		connectInfo.manager = manager;
-		return connectInfo;
-	}
-
-	public RemoveGroupInfo initRemoveGroup() {
-		RemoveGroupInfo removeGroupInfo = new RemoveGroupInfo();
-		removeGroupInfo.channel = channel;
-		removeGroupInfo.manager = manager;
-		return removeGroupInfo;
-	}
-
-	public CancelConnectInfo initCancelConnect() {
-		CancelConnectInfo cancelConnectInfo = new CancelConnectInfo();
+		
 		cancelConnectInfo.channel = channel;
 		cancelConnectInfo.manager = manager;
-		return cancelConnectInfo;
+		
+		removeGroupInfo.channel = channel;
+		removeGroupInfo.manager = manager;
 	}
 
 	public void registerReceiver() {
@@ -104,5 +97,9 @@ public class WifiDirectConnect extends Block {
 
 	// Do not edit this constructor.
 	public WifiDirectConnect() {
+	}
+
+	public void setConnectedTrue() {
+		connected = true;
 	}
 }
